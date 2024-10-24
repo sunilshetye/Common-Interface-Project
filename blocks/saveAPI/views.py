@@ -166,6 +166,23 @@ class FetchSaveDiagram(APIView):
             return Response({'error': 'Invalid sharing state'},
                             status=status.HTTP_400_BAD_REQUEST)
 
+    def update_state(self, state, data):
+        # if data dump, shared, name, or description needs to be updated
+        if 'data_dump' in data:
+            state.data_dump = data['data_dump']
+        if 'shared' in data:
+            state.shared = bool(data['shared'])
+        if 'name' in data:
+            state.name = data['name']
+        if 'description' in data:
+            state.description = data['description']
+        # if thumbnail needs to be updated
+        if 'base64_image' in data:
+            img = Base64ImageField(max_length=None, use_url=True)
+            filename, content = img.update(
+                data['base64_image'])
+            state.base64_image.save(filename, content)
+
     @swagger_auto_schema(responses={200: StateSaveSerializer})
     def post(self, request, save_id):
         if isinstance(save_id, uuid.UUID):
@@ -186,21 +203,7 @@ class FetchSaveDiagram(APIView):
                                 status=status.HTTP_406_NOT_ACCEPTABLE)
 
             try:
-                # if data dump, shared,name and description needs to be updated
-                if 'data_dump' in request.data:
-                    saved_state.data_dump = request.data['data_dump']
-                if 'shared' in request.data:
-                    saved_state.shared = bool(request.data['shared'])
-                if 'name' in request.data:
-                    saved_state.name = request.data['name']
-                if 'description' in request.data:
-                    saved_state.description = request.data['description']
-                # if thumbnail needs to be updated
-                if 'base64_image' in request.data:
-                    img = Base64ImageField(max_length=None, use_url=True)
-                    filename, content = img.update(
-                        request.data['base64_image'])
-                    saved_state.base64_image.save(filename, content)
+                self.update_state(saved_state, request.data)
                 saved_state.save()
                 serialized = SaveListSerializer(saved_state)
                 return Response(serialized.data)

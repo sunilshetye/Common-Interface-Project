@@ -9,7 +9,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blocks.settings')
 # Initialize Django
 django.setup()
 
-from saveAPI.views import GalleryView
+from saveAPI.views import GalleryView  # noqa: E402
 
 
 def escape_quotes(value):

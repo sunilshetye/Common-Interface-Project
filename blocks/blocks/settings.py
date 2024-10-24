@@ -214,7 +214,7 @@ STATIC_URL = '/django_static/'
 FILE_STORAGE_ROOT = os.path.join(BASE_DIR, 'file_storage')
 FILE_STORAGE_URL = '/files'
 
-# noqa For Netlist handling netlist uploads and other temp uploads
+# For Netlist handling netlist uploads and other temp uploads
 MEDIA_URL = '/files/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'file_storage')
 

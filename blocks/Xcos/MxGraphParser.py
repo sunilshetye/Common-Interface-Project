@@ -294,7 +294,7 @@ for root in model:
                                                 float(componentGeometry['height']) * float(geometryY))
                         geometry['x'] = geometryX
                         geometry['y'] = geometryY
-                    
+
                     globals()[stylename](outroot, attribid, ParentComponent, ordering, geometry, style=style)
 
                     IDLIST[attribid] = stylename

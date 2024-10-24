@@ -27,7 +27,7 @@ def activate_user(request, uid, token):
     """
 
     protocol = 'https://' if request.is_secure() else 'http://'
-    web_url = protocol + request.get_host() + '/api/auth/users/activation/'  # noqa URL comes from Djoser library
+    web_url = protocol + request.get_host() + '/api/auth/users/activation/'  # URL comes from Djoser library
     return render(request, 'activate_user.html',
                   {'uid': uid,
                    'token': token,
