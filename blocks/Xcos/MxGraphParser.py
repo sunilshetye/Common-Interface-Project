@@ -193,7 +193,7 @@ for root in model:
     portCount = {}
     IDLIST = {}
     componentOrdering = 0
-    nextattribid = 0
+    nextattribid = 1
     nextAttribForSplit = 10000
     edgeDict = {}
     edgeList = []
@@ -267,8 +267,8 @@ for root in model:
                             else:
                                 break
 
-                    style = style_to_object(style)['default']
-                    globals()[style](outroot, attribid, componentOrdering, componentGeometry, parameters, parent=parentattribid)
+                    stylename = style_to_object(style)['default']
+                    globals()[stylename](outroot, attribid, componentOrdering, componentGeometry, parameters, parent=parentattribid, style=style)
 
                     IDLIST[attribid] = cell_type
                     blkgeometry[attribid] = componentGeometry
@@ -276,9 +276,10 @@ for root in model:
                 elif 'vertex' in attrib:
 
                     style = attrib['style']
+                    stylename = style_to_object(style)['default']
                     ParentComponent = attrib['ParentComponent']
-                    portCount[ParentComponent][style] += 1
-                    ordering = portCount[ParentComponent][style]
+                    portCount[ParentComponent][stylename] += 1
+                    ordering = portCount[ParentComponent][stylename]
                     geometry = dict(componentGeometry)
                     mxGeometry = cell.find('mxGeometry')
                     if mxGeometry is not None:
@@ -293,9 +294,10 @@ for root in model:
                                                 float(componentGeometry['height']) * float(geometryY))
                         geometry['x'] = geometryX
                         geometry['y'] = geometryY
-                    globals()[style](outroot, attribid, ParentComponent, ordering, geometry)
+                    
+                    globals()[stylename](outroot, attribid, ParentComponent, ordering, geometry, style=style)
 
-                    IDLIST[attribid] = style
+                    IDLIST[attribid] = stylename
                     blkgeometry[attribid] = geometry
 
                 elif 'edge' in attrib:
@@ -430,7 +432,13 @@ for (attribid, sourceVertex, targetVertex, sourceType, targetType, style, waypoi
     geometry['width'] = 7
     geometry['x'] = split_point['x']
     geometry['y'] = split_point['y']
-    SplitBlock(outroot, nextattribid, componentOrdering, geometry, parent=parentattribid)
+    if sourceType2 == 'ControlPort' or sourceType2 == 'CommandPort' or sourceType2 == 'CommandControlLink':
+        split_style = 'CLKSPLIT_f'
+        func_name = 'CLKSPLIT_f'
+    else:
+        split_style = 'SPLIT_f;flip=false;mirror=false'
+        func_name = 'SPLIT_f'
+    SplitBlock(outroot, nextattribid, componentOrdering, geometry, parent=parentattribid, style=split_style, func_name=func_name)
     splitblockid = nextattribid
     nextattribid += 1
 

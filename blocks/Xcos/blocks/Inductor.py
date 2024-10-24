@@ -5,7 +5,6 @@ def Inductor(outroot, attribid, ordering, geometry, parameters, parent=1, style=
     func_name = 'Inductor'
     if style is None:
         style = func_name
-
     outnode = addOutNode(outroot, BLOCK_BASIC,
                          attribid, ordering, parent,
                          func_name, 'Inductor', 'DEFAULT',

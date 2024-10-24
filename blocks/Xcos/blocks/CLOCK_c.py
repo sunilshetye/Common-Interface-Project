@@ -99,14 +99,14 @@ def CLOCK_c(outroot, attribid, ordering, geometry, parameters, parent=1, style=N
                      style="CommandControlLink", value="")
     gemotryNode = addGeoNode(CCLink, GEOMETRY, a="geometry")
     addmxPointNode(gemotryNode, 'mxPoint',
-                   a="sourcePoint", x="0.0", y="11.0")
+                   a="sourcePoint", x="10.0", y="12.0")
     ArrayNode = addArray(gemotryNode, TYPE_ARRAY, a="points")
     addPointNode(ArrayNode, 'mxPoint',
-                 x="100.70999999999998", y="40.0")
-    addPointNode(ArrayNode, 'mxPoint', x="60.0",
-                 y="40.0")
+                 x="151.70999999999998", y="58.0")
+    addPointNode(ArrayNode, 'mxPoint', x="111.0",
+                 y="58.0")
     addmxPointNode(gemotryNode, 'mxPoint',
-                   a="targetPoint", x="20.0", y="-4.0")
+                   a="targetPoint", x="20.0", y="44.0")
     CCLink = addLink(root, TYPE_LINK, id=link_id[1],
                      parent=block_id[1],
                      source=port_id[4],
@@ -114,7 +114,7 @@ def CLOCK_c(outroot, attribid, ordering, geometry, parameters, parent=1, style=N
                      style="CommandControlLink", value="")
     gemotryNode = addGeoNode(CCLink, GEOMETRY, a="geometry")
     addmxPointNode(gemotryNode, 'mxPoint', a="sourcePoint",
-                   x="0.0", y="11.0")
+                   x="0.0", y="-4.0")
     ArrayNode = addArray(gemotryNode, TYPE_ARRAY, a="points")
     addmxPointNode(gemotryNode, 'mxPoint', a="targetPoint",
                    x="10.0", y="-4.0")
@@ -125,11 +125,11 @@ def CLOCK_c(outroot, attribid, ordering, geometry, parameters, parent=1, style=N
                      style="CommandControlLink", value="")
     gemotryNode = addGeoNode(CCLink, GEOMETRY, a="geometry")
     addmxPointNode(gemotryNode, 'mxPoint', a="sourcePoint",
-                   x="20.0", y="44.0")
+                   x="20.0", y="-4.0")
     ArrayNode = addArray(gemotryNode, TYPE_ARRAY, a="points")
-    addPointNode(ArrayNode, 'mxPoint', x="60.0", y="170.0")
+    addPointNode(ArrayNode, 'mxPoint', x="106.0", y="204.0")
     addmxPointNode(gemotryNode, 'mxPoint', a="targetPoint",
-                   x="0.0", y="-4.0")
+                   x="0.0", y="12.0")
 
     addNodemxCell(SuperBlockDiagram, TYPE_MXCELL, a='defaultParent',
                   id=block_id[1],
