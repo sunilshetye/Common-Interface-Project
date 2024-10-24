@@ -278,8 +278,14 @@ for root in model:
                     style = attrib['style']
                     stylename = style_to_object(style)['default']
                     ParentComponent = attrib['ParentComponent']
-                    portCount[ParentComponent][stylename] += 1
-                    ordering = portCount[ParentComponent][stylename]
+                    if stylename == 'ImplicitInputPort':
+                        orderingname = 'ExplicitInputPort'
+                    elif stylename == 'ImplicitOutputPort':
+                        orderingname = 'ExplicitOutputPort'
+                    else:
+                        orderingname = stylename
+                    portCount[ParentComponent][orderingname] += 1
+                    ordering = portCount[ParentComponent][orderingname]
                     geometry = dict(componentGeometry)
                     mxGeometry = cell.find('mxGeometry')
                     if mxGeometry is not None:
