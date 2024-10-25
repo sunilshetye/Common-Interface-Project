@@ -88,14 +88,14 @@ export function ClearGrid () {
 
 // ROTATE COMPONENT
 export function Rotate () {
-  const view = graph.getView()
   const cell = graph.getSelectionCell()
-  const state = view.getState(cell, true)
-  const vHandler = graph.createVertexHandler(state)
-  if (cell != null) {
+  if (cell != null && cell.CellType === 'Component') {
+    const view = graph.getView()
+    const state = view.getState(cell, true)
+    const vHandler = graph.createVertexHandler(state)
     vHandler.rotateCell(cell, 90, cell.getParent())
+    vHandler.destroy()
   }
-  vHandler.destroy()
 }
 
 // PRINT PREVIEW OF SCHEMATIC
