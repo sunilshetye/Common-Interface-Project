@@ -38,11 +38,11 @@ const {
   mxImage
 } = new mxGraphFactory()
 
-function configureStylesheet(graph) {
+function configureStylesheet (graph) {
   graph.stylesheet.styles = blockstyle
 }
 
-export function styleToObject(style) {
+export function styleToObject (style) {
   // To add semicolon at the end if it isn't already present.
   if (style[style.length - 1] !== ';') {
     style = style + ';'
@@ -80,7 +80,7 @@ export const InputPort = 3
 export const OutputPort = 4
 export const SplitPort = 5
 
-export function getPortType(cell, isSplit = false) {
+export function getPortType (cell, isSplit = false) {
   while (cell.edge === true) {
     cell = cell.source
     isSplit = true
@@ -110,7 +110,7 @@ export function getPortType(cell, isSplit = false) {
   return { type1, type2 }
 }
 
-export default function LoadGrid(container, sidebar, outline) {
+export default function LoadGrid (container, sidebar, outline) {
   // Checks if the browser is supported
   if (!mxClient.isBrowserSupported()) {
     // Displays an error message if the browser is not supported.
@@ -735,7 +735,7 @@ export default function LoadGrid(container, sidebar, outline) {
     return style
   }
 
-  function ResistorShape() { }
+  function ResistorShape () { }
   ResistorShape.prototype = new mxCylinder()
   ResistorShape.prototype.constructor = ResistorShape
 
