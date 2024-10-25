@@ -207,6 +207,11 @@ export default function LoadGrid (container, sidebar, outline) {
       if (this.graph.getModel().isEdge(cell)) {
         return true
       } else {
+        const edgeCount = (cell != null) ? cell.getEdgeCount() : 0
+        if (edgeCount !== 0) {
+          return false
+        }
+
         const geo = (cell != null) ? this.graph.getCellGeometry(cell) : null
 
         return (geo != null) ? geo.relative : false
@@ -254,6 +259,14 @@ export default function LoadGrid (container, sidebar, outline) {
           return 'Cannot connect a link to an output port'
         }
       }
+      // Rule 6: cannot connect from an already connected port again
+      if (!isSplitSource && source.getEdgeCount() > 0) {
+        return 'Cannot connect from an already connected port again'
+      }
+      // Rule 7: cannot connect to an already connected port again
+      if (!isSplitTarget && target.getEdgeCount() > 0) {
+        return 'Cannot connect to an already connected port again'
+      }
 
       return null
     }
@@ -286,8 +299,8 @@ export default function LoadGrid (container, sidebar, outline) {
           }
           text = style + '\n' +
             'UID: ' + cell.id + '\n' +
-            'Source: ' + cell.source.id + '\n' +
-            'Target: ' + cell.target.id + '\n'
+            'Source: ' + cell.source?.id + '\n' +
+            'Target: ' + cell.target?.id + '\n'
           return text
         }
 
