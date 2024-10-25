@@ -224,18 +224,8 @@ export default function LoadGrid (container, sidebar, outline) {
 
     // Override the connection validation function
     graph.connectionHandler.validateConnection = function (source, target) {
-      let isSplitSource = false
-      let isSplitTarget = false
-      while (source.edge === true) {
-        source = source.source
-        isSplitSource = true
-      }
-      while (target.edge === true) {
-        target = target.target
-        isSplitTarget = true
-      }
-      const sourceType = getPortType(source, isSplitSource)
-      const targetType = getPortType(target, isSplitTarget)
+      const sourceType = getPortType(source)
+      const targetType = getPortType(target)
       // Rule 1: Check if source and target ports are of the same type
       if (sourceType.type1 !== targetType.type1) {
         return 'Types do not match'
@@ -260,15 +250,23 @@ export default function LoadGrid (container, sidebar, outline) {
         }
       }
       // Rule 6: cannot connect from an already connected port again
-      if (!isSplitSource && source.getEdgeCount() > 0) {
+      if (sourceType.type2 !== SplitPort && source.getEdgeCount() > 0) {
         return 'Cannot connect from an already connected port again'
       }
       // Rule 7: cannot connect to an already connected port again
-      if (!isSplitTarget && target.getEdgeCount() > 0) {
+      if (targetType.type2 !== SplitPort && target.getEdgeCount() > 0) {
         return 'Cannot connect to an already connected port again'
       }
 
       return null
+    }
+
+    graph.addEdge = function (edge, parent, source, target, index) {
+      if (source == null || target == null) {
+        return null
+      }
+
+      return mxGraph.prototype.addEdge.apply(this, arguments)
     }
 
     // Adds a special tooltip for edges
