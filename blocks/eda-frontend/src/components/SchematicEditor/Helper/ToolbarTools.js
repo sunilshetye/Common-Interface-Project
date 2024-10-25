@@ -370,7 +370,8 @@ function parseXmlToGraph (xmlDoc, graph) {
         const cellAttrs = cell.attributes
         const cellChildren = cell.children
         if (cellAttrs.CellType?.value === 'Component') { // is component
-          const style = styleToObject(cellAttrs.style.value).default
+          const style = cellAttrs.style.value
+          // const styleObject = styleToObject(style)
           const vertexId = cellAttrs.id.value
           const geom = cellChildren[0].attributes
           const xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
@@ -421,14 +422,15 @@ function parseXmlToGraph (xmlDoc, graph) {
           v1.commandPorts = 0
           v1.simulationFunction = cellAttrs.simulationFunction?.value
         } else if (cellAttrs.CellType?.value === 'Pin') {
-          const style = styleToObject(cellAttrs.style.value).default
+          const style = cellAttrs.style.value
+          const stylename = styleToObject(style).default
           const vertexId = cellAttrs.id.value
           const geom = cellChildren[0].attributes
           const xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
           const yPos = (geom.y !== undefined) ? Number(geom.y.value) : 0
           let pointX
           let pointY
-          switch (style) {
+          switch (stylename) {
             case 'ExplicitInputPort':
               pointX = -portSize
               pointY = -portSize / 2

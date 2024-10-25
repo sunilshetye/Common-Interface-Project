@@ -9,10 +9,10 @@ def ImplicitInputPort(outroot, attribid, parentattribid, ordering, geometry,
         style = func_name
 
     if forSplitBlock:
-        outnode = addNode(outroot, func_name, connectable=0,
-                          dataType='UNKNOW_TYPE', **{'id': attribid},
-                          ordering=ordering, parent=parentattribid,
-                          style=style, visible=0)
+        outnode = addNode(outroot, func_name, **{'id': attribid},
+                          parent=parentattribid, ordering=ordering,
+                          initialState="-1.0",
+                          style=style, value='')
     elif addDataLines:
         outnode = addNode(outroot, func_name, **{'id': attribid},
                           parent=parentattribid, ordering=ordering,
@@ -23,6 +23,7 @@ def ImplicitInputPort(outroot, attribid, parentattribid, ordering, geometry,
         outnode = addNode(outroot, func_name, **{'id': attribid},
                           parent=parentattribid, ordering=ordering,
                           dataType='REAL_MATRIX', dataColumns=1,
+                          dataLines=1,
                           initialState="-1.0", style=style,
                           value=value)
 

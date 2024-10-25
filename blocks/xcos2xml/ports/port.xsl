@@ -17,7 +17,7 @@
         <xsl:for-each select="key('k-in', $id)">
           <xsl:element name="mxCell">
             <xsl:attribute name="style">
-            <xsl:value-of select="name(.)" />
+            <xsl:value-of select="@style" />
             </xsl:attribute>
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />
@@ -49,7 +49,7 @@
         <xsl:for-each select="key('k-out', $id)">
           <xsl:element name="mxCell">
             <xsl:attribute name="style">
-            <xsl:value-of select="name(.)" />
+            <xsl:value-of select="@style" />
             </xsl:attribute>
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />
@@ -82,7 +82,7 @@
         <xsl:for-each select="key('k-command', $id)">
           <xsl:element name="mxCell">
             <xsl:attribute name="style">
-            <xsl:value-of select="name(.)" />
+            <xsl:value-of select="@style" />
             </xsl:attribute>
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />
@@ -115,7 +115,7 @@
         <xsl:for-each select="key('k-control', $id)">
           <xsl:element name="mxCell">
             <xsl:attribute name="style">
-            <xsl:value-of select="name(.)" />
+            <xsl:value-of select="@style" />
             </xsl:attribute>
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />

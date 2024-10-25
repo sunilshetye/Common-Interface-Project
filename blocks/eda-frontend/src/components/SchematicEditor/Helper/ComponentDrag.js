@@ -294,15 +294,15 @@ export default function LoadGrid (container, sidebar, outline) {
         const styleObject = styleToObject(attribute)
         let flip
         let mirror
-        if (styleObject.stencilFlipV == null) {
+        if (styleObject.flip == null) {
           flip = false
         } else {
-          flip = (styleObject.stencilFlipV !== '0')
+          flip = (styleObject.flip === 'true')
         }
-        if (styleObject.stencilFlipH == null) {
+        if (styleObject.mirror == null) {
           mirror = false
         } else {
-          mirror = (styleObject.stencilFlipH !== '0')
+          mirror = (styleObject.mirror === 'true')
         }
 
         if (cell.CellType === 'Component') {
@@ -312,7 +312,7 @@ export default function LoadGrid (container, sidebar, outline) {
           const commandPorts = cell.commandPorts
           const geometry = cell.geometry
 
-          text = 'Block Name: ' + attribute + '\n' +
+          text = 'Block Name: ' + styleObject.default + '\n' +
             'Simulation: ' + cell.simulationFunction + '\n' +
             'UID: ' + cell.id + '\n' +
             'Style: ' + cell.style + '\n' +
