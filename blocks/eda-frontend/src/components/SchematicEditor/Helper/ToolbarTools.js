@@ -88,6 +88,7 @@ export function ClearGrid () {
 
 // ROTATE COMPONENT
 export function Rotate () {
+  const view = graph.getView()
   const cell = graph.getSelectionCell()
   if (cell != null && cell.CellType === 'Component') {
     const view = graph.getView()
@@ -352,10 +353,50 @@ export function renderXML () {
   parseXmlToGraph(xmlDoc, graph)
 }
 
+const L2T = 0; const L2R = 1; const L2B = 3; const T2R = 4; const T2B = 5; const T2L = 6
+function getRotatename (stylename, rotation) {
+  const typeofport = ['ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort', 'ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort']
+  let rotatename
+  if (stylename === 'ImplicitInputPort') {
+    rotatename = 'ExplicitInputPort'
+  } else if (stylename === 'ImplicitOutputPort') {
+    rotatename = 'ExplicitOutputPort'
+  } else {
+    rotatename = stylename
+  }
+
+  let index = typeofport.indexOf(rotatename)
+  let portdirection
+  if (rotation === 90) {
+    if (rotatename === 'ExplicitInputPort' || rotatename === 'ExplicitOutputPort') {
+      portdirection = L2T
+    } else if (rotatename === 'ControlPort' || rotatename === 'CommandPort') {
+      portdirection = T2R
+    }
+    index += 1
+  } else if (rotation === 180) {
+    if (rotatename === 'ExplicitInputPort' || rotatename === 'ExplicitOutputPort') {
+      portdirection = L2R
+    } else if (rotatename === 'ControlPort' || rotatename === 'CommandPort') {
+      portdirection = T2B
+    }
+    index += 2
+  } else if (rotation === 270) {
+    if (rotatename === 'ExplicitInputPort' || rotatename === 'ExplicitOutputPort') {
+      portdirection = L2B
+    } else if (rotatename === 'ControlPort' || rotatename === 'CommandPort') {
+      portdirection = T2L
+    }
+    index += 3
+  }
+  rotatename = typeofport[index]
+  return { rotatename, portdirection }
+}
+
 function parseXmlToGraph (xmlDoc, graph) {
   const parent = graph.getDefaultParent()
   let v1
-
+  let blockrotation
   graph.getModel().beginUpdate()
 
   let oldcellslength = 0
@@ -371,7 +412,13 @@ function parseXmlToGraph (xmlDoc, graph) {
         const cellChildren = cell.children
         if (cellAttrs.CellType?.value === 'Component') { // is component
           const style = cellAttrs.style.value
-          // const styleObject = styleToObject(style)
+          const styleObject = styleToObject(style)
+          // console.log(styleObject)
+          if (styleObject.rotation === undefined) {
+            blockrotation = 0
+          } else {
+            blockrotation = parseInt(styleObject.rotation)
+          }
           const vertexId = cellAttrs.id.value
           const geom = cellChildren[0].attributes
           const xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
@@ -423,49 +470,105 @@ function parseXmlToGraph (xmlDoc, graph) {
           v1.simulationFunction = cellAttrs.simulationFunction?.value
         } else if (cellAttrs.CellType?.value === 'Pin') {
           const style = cellAttrs.style.value
-          const stylename = styleToObject(style).default
+          const styleObject = styleToObject(style)
+          const stylename = styleObject.default
+          let portrotation
+
+          if (styleObject.rotation === undefined) {
+            portrotation = 0
+          } else {
+            portrotation = parseInt(styleObject.rotation)
+          }
+          let rotate = portrotation - blockrotation
+          if (stylename == 'ControlPort' || stylename == 'CommandPort') {
+            rotate -= 90
+          }
+
           const vertexId = cellAttrs.id.value
           const geom = cellChildren[0].attributes
-          const xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
-          const yPos = (geom.y !== undefined) ? Number(geom.y.value) : 0
+
+          let xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
+          let yPos = (geom.y !== undefined) ? Number(geom.y.value) : 0
+          if (rotate != 0) {
+            console.log('Ports:', styleObject)
+            console.log('DIFF:', rotate)
+            console.log(geom, xPos, yPos, portSize)
+          }
           let pointX
           let pointY
+
+          const rotatename = getRotatename(stylename, rotate)
           switch (stylename) {
             case 'ExplicitInputPort':
-              pointX = -portSize
-              pointY = -portSize / 2
               v1.explicitInputPorts += 1
               break
             case 'ImplicitInputPort':
+              v1.implicitInputPorts += 1
+              break
+            case 'ControlPort':
+              v1.controlPorts += 1
+              break
+            case 'ExplicitOutputPort':
+              v1.explicitOutputPorts += 1
+              break
+            case 'ImplicitOutputPort':
+              v1.implicitOutputPorts += 1
+              break
+            case 'CommandPort':
+              v1.commandPorts += 1
+              break
+          }
+
+          switch (rotatename.rotatename) {
+            case 'ExplicitInputPort':
               pointX = -portSize
               pointY = -portSize / 2
-              v1.implicitInputPorts += 1
               break
             case 'ControlPort':
               pointX = -portSize / 2
               pointY = -portSize
-              v1.controlPorts += 1
               break
             case 'ExplicitOutputPort':
               pointX = 0
               pointY = -portSize / 2
-              v1.explicitOutputPorts += 1
-              break
-            case 'ImplicitOutputPort':
-              pointX = 0
-              pointY = -portSize / 2
-              v1.implicitOutputPorts += 1
               break
             case 'CommandPort':
               pointX = -portSize / 2
               pointY = 0
-              v1.commandPorts += 1
               break
             default:
               pointX = -portSize / 2
               pointY = -portSize / 2
               break
           }
+          const xPos_old = xPos
+          switch (rotatename.portdirection) {
+            case L2T:
+              xPos = yPos
+              yPos = xPos_old
+              break
+            case L2R:
+              xPos = 1 - xPos_old
+              yPos = yPos
+              break
+            case L2B:
+              xPos = yPos
+              yPos = 1 - xPos_old
+              break
+            case T2R:
+              xPos = 1 - yPos
+              yPos = xPos_old
+              break
+            case T2B:
+              xPos = xPos_old
+              yPos = 1 - yPos
+              break
+            case T2L:
+              xPos = yPos
+              yPos = xPos_old
+              break
+          }
+
           const point = new mxPoint(pointX, pointY)
           const vp = graph.insertVertex(v1, vertexId, null, xPos, yPos, portSize, portSize, style)
           vp.geometry.relative = true
