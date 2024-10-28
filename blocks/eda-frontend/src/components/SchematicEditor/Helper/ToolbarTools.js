@@ -352,9 +352,22 @@ export function renderXML () {
   parseXmlToGraph(xmlDoc, graph)
 }
 
-const L2T = 0; const L2R = 1; const L2B = 3; const T2R = 4; const T2B = 5; const T2L = 6
-function getRotatename (stylename, rotation) {
-  const typeofport = ['ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort', 'ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort']
+const PORTDIRECTIONS = {
+  UNK: 0,
+  LOR: 4,
+  L2T: 5,
+  L2R: 6,
+  L2B: 7,
+  TOB: 12,
+  T2R: 13,
+  T2B: 14,
+  T2L: 15
+}
+
+function getRotationParameters (stylename, rotation) {
+  const RotateNames = ['ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort',
+    'ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort']
+
   let rotatename
   if (stylename === 'ImplicitInputPort') {
     rotatename = 'ExplicitInputPort'
@@ -364,31 +377,24 @@ function getRotatename (stylename, rotation) {
     rotatename = stylename
   }
 
-  let index = typeofport.indexOf(rotatename)
-  let portdirection
-  if (rotation === 90) {
-    if (rotatename === 'ExplicitInputPort' || rotatename === 'ExplicitOutputPort') {
-      portdirection = L2T
-    } else if (rotatename === 'ControlPort' || rotatename === 'CommandPort') {
-      portdirection = T2R
-    }
-    index += 1
-  } else if (rotation === 180) {
-    if (rotatename === 'ExplicitInputPort' || rotatename === 'ExplicitOutputPort') {
-      portdirection = L2R
-    } else if (rotatename === 'ControlPort' || rotatename === 'CommandPort') {
-      portdirection = T2B
-    }
-    index += 2
-  } else if (rotation === 270) {
-    if (rotatename === 'ExplicitInputPort' || rotatename === 'ExplicitOutputPort') {
-      portdirection = L2B
-    } else if (rotatename === 'ControlPort' || rotatename === 'CommandPort') {
-      portdirection = T2L
-    }
-    index += 3
+  let index = RotateNames.indexOf(rotatename)
+
+  let portdirection = PORTDIRECTIONS.UNK
+  if (rotatename === 'ExplicitInputPort' || rotatename === 'ExplicitOutputPort') {
+    portdirection = PORTDIRECTIONS.LOR
+  } else if (rotatename === 'ControlPort' || rotatename === 'CommandPort') {
+    portdirection = PORTDIRECTIONS.TOB
   }
-  rotatename = typeofport[index]
+
+  const turns = Math.round(rotation / 90)
+
+  if (turns !== 0) {
+    index += turns
+    rotatename = RotateNames[index]
+
+    portdirection += turns
+  }
+
   return { rotatename, portdirection }
 }
 
@@ -421,7 +427,6 @@ function parseXmlToGraph (xmlDoc, graph) {
           }
           const style = cellAttrs.style.value
           const styleObject = styleToObject(style)
-          console.log(styleObject)
           if (styleObject.rotation === undefined) {
             blockrotation = 0
           } else {
@@ -487,12 +492,12 @@ function parseXmlToGraph (xmlDoc, graph) {
           } else {
             portrotation = parseInt(styleObject.rotation)
           }
-          let rotate = portrotation - blockrotation
+          let rotation = portrotation - blockrotation
           if (stylename === 'ControlPort' || stylename === 'CommandPort') {
-            rotate -= 90
+            rotation -= 90
           }
-          if (rotate < 0) {
-            rotate += 360
+          if (rotation < 0) {
+            rotation += 360
           }
 
           const vertexId = cellAttrs.id.value
@@ -500,15 +505,16 @@ function parseXmlToGraph (xmlDoc, graph) {
           console.log('CELLATTR:', cellAttrs)
           let xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
           let yPos = (geom.y !== undefined) ? Number(geom.y.value) : 0
-          // if (rotate != 0) {
-          console.log('Ports:', styleObject)
-          console.log('DIFF:', rotate)
-          console.log(geom, xPos, yPos, portSize)
-          // }
-          let pointX
-          let pointY
 
-          const rotatename = getRotatename(stylename, rotate)
+          const rotationParameters = getRotationParameters(stylename, rotation)
+
+          if (rotation !== 0) {
+            console.log('Ports:', styleObject)
+            console.log('DIFF:', rotation)
+            console.log(geom, xPos, yPos, portSize)
+            console.log('rotationParameters:', rotationParameters)
+          }
+
           switch (stylename) {
             case 'ExplicitInputPort':
               v1.explicitInputPorts += 1
@@ -530,7 +536,9 @@ function parseXmlToGraph (xmlDoc, graph) {
               break
           }
 
-          switch (rotatename.rotatename) {
+          let pointX
+          let pointY
+          switch (rotationParameters.rotatename) {
             case 'ExplicitInputPort':
               pointX = -portSize
               pointY = -portSize / 2
@@ -552,31 +560,29 @@ function parseXmlToGraph (xmlDoc, graph) {
               pointY = -portSize / 2
               break
           }
+
           const xPosOld = xPos
-          switch (rotatename.portdirection) {
-            case L2T:
+          switch (rotationParameters.portdirection) {
+            case PORTDIRECTIONS.L2T:
+            case PORTDIRECTIONS.T2L:
               xPos = yPos
               yPos = xPosOld
               break
-            case L2R:
+            case PORTDIRECTIONS.L2R:
               xPos = 1 - xPosOld
-              // yPos = yPos
+              /* same yPos */
               break
-            case L2B:
+            case PORTDIRECTIONS.L2B:
               xPos = yPos
               yPos = 1 - xPosOld
               break
-            case T2R:
+            case PORTDIRECTIONS.T2R:
               xPos = 1 - yPos
               yPos = xPosOld
               break
-            case T2B:
-              xPos = xPosOld
+            case PORTDIRECTIONS.T2B:
+              /* same xPos */
               yPos = 1 - yPos
-              break
-            case T2L:
-              xPos = yPos
-              yPos = xPosOld
               break
           }
 
