@@ -281,8 +281,9 @@ export default function LoadGrid (container, sidebar, outline) {
           while (source.edge === true) {
             source = source.source
           }
+          const styleObject = styleToObject(source.style)
           let style = 'Link'
-          switch (source.style) {
+          switch (styleObject.default) {
             case 'ExplicitOutputPort': case 'ExplicitInputPort':
               style = 'ExplicitLink'
               break
@@ -340,7 +341,7 @@ export default function LoadGrid (container, sidebar, outline) {
         } else {
           const geometry = cell.geometry
 
-          text = attribute + '\n' +
+          text = styleObject.default + '\n' +
             'UID: ' + cell.id + '\n' +
             'Style: ' + cell.style + '\n' +
             'Flip: ' + flip + '\n' +

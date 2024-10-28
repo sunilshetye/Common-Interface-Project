@@ -88,7 +88,6 @@ export function ClearGrid () {
 
 // ROTATE COMPONENT
 export function Rotate () {
-  const view = graph.getView()
   const cell = graph.getSelectionCell()
   if (cell != null && cell.CellType === 'Component') {
     const view = graph.getView()
