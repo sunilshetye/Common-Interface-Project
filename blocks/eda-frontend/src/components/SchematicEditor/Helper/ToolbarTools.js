@@ -21,7 +21,7 @@ const {
   mxPoint
 } = new mxGraphFactory()
 
-export default function toolbarTools(grid, unredo) {
+export default function toolbarTools (grid, unredo) {
   graph = grid
 
   undoManager = new mxUndoManager()
@@ -33,7 +33,7 @@ export default function toolbarTools(grid, unredo) {
 }
 
 // SAVE
-export function saveXml(description = '') {
+export function saveXml (description = '') {
   try {
     xmlWireConnections()
   } catch (e) {
@@ -52,42 +52,42 @@ export function saveXml(description = '') {
 }
 
 // UNDO
-export function editorUndo() {
+export function editorUndo () {
   undoManager.undo()
 }
 
 // REDO
-export function editorRedo() {
+export function editorRedo () {
   undoManager.redo()
 }
 
 // Zoom IN
-export function editorZoomIn() {
+export function editorZoomIn () {
   graph.zoomIn()
 }
 
 // ZOOM OUT
-export function editorZoomOut() {
+export function editorZoomOut () {
   graph.zoomOut()
 }
 
 // ZOOM ACTUAL
-export function editorZoomAct() {
+export function editorZoomAct () {
   graph.zoomActual()
 }
 
 // DELETE COMPONENT
-export function deleteComp() {
+export function deleteComp () {
   graph.removeCells()
 }
 
 // CLEAR WHOLE GRID
-export function ClearGrid() {
+export function ClearGrid () {
   graph.removeCells(graph.getChildVertices(graph.getDefaultParent()))
 }
 
 // ROTATE COMPONENT
-export function Rotate() {
+export function Rotate () {
   const view = graph.getView()
   const cell = graph.getSelectionCell()
   if (cell != null && cell.CellType === 'Component') {
@@ -100,7 +100,7 @@ export function Rotate() {
 }
 
 // PRINT PREVIEW OF SCHEMATIC
-export function PrintPreview() {
+export function PrintPreview () {
   // Matches actual printer paper size and avoids blank pages
   const scale = 0.8
   const headerSize = 50
@@ -164,7 +164,7 @@ export function PrintPreview() {
 }
 
 // ERC CHECK FOR SCHEMATIC
-export function ErcCheck() {
+export function ErcCheck () {
   const NoAddition = 'No ' + process.env.REACT_APP_BLOCK_NAME + ' added'
   const list = graph.getModel().cells // mapping the grid
   let vertexCount = 0
@@ -205,7 +205,7 @@ export function ErcCheck() {
   }
 }
 
-function ercCheckNets() {
+function ercCheckNets () {
   const NoAddition = 'No ' + process.env.REACT_APP_BLOCK_NAME + ' added'
   const list = graph.getModel().cells // mapping the grid
   let vertexCount = 0
@@ -247,7 +247,7 @@ function ercCheckNets() {
 }
 
 // GENERATE NETLIST
-export function generateNetList() {
+export function generateNetList () {
   let c = 1
   const spiceModels = ''
   const netlist = {
@@ -342,19 +342,19 @@ export function generateNetList() {
   return netobj
 }
 
-function annotate(graph) {
+function annotate (graph) {
   return graph.getModel().cells
 }
 
-export function renderXML() {
+export function renderXML () {
   graph.view.refresh()
   const xml = 'null'
   const xmlDoc = mxUtils.parseXml(xml)
   parseXmlToGraph(xmlDoc, graph)
 }
 
-const L2T = 0, L2R = 1, L2B = 3, T2R = 4, T2B = 5, T2L = 6
-function getRotatename(stylename, rotation) {
+const L2T = 0; const L2R = 1; const L2B = 3; const T2R = 4; const T2B = 5; const T2L = 6
+function getRotatename (stylename, rotation) {
   const typeofport = ['ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort', 'ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort']
   let rotatename
   if (stylename === 'ImplicitInputPort') {
@@ -393,7 +393,7 @@ function getRotatename(stylename, rotation) {
   return { rotatename, portdirection }
 }
 
-function parseXmlToGraph(xmlDoc, graph) {
+function parseXmlToGraph (xmlDoc, graph) {
   const parent = graph.getDefaultParent()
   let v1
   let blockrotation
@@ -484,14 +484,12 @@ function parseXmlToGraph(xmlDoc, graph) {
             rotate -= 90
           }
 
-
           const vertexId = cellAttrs.id.value
           const geom = cellChildren[0].attributes
 
           let xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
           let yPos = (geom.y !== undefined) ? Number(geom.y.value) : 0
           if (rotate != 0) {
-
             console.log('Ports:', styleObject)
             console.log('DIFF:', rotate)
             console.log(geom, xPos, yPos, portSize)
@@ -499,7 +497,7 @@ function parseXmlToGraph(xmlDoc, graph) {
           let pointX
           let pointY
 
-          let rotatename = getRotatename(stylename, rotate)
+          const rotatename = getRotatename(stylename, rotate)
           switch (stylename) {
             case 'ExplicitInputPort':
               v1.explicitInputPorts += 1
@@ -645,14 +643,14 @@ function parseXmlToGraph(xmlDoc, graph) {
   }
 }
 
-export function renderGalleryXML(xml) {
+export function renderGalleryXML (xml) {
   graph.removeCells(graph.getChildVertices(graph.getDefaultParent()))
   graph.view.refresh()
   const xmlDoc = mxUtils.parseXml(xml)
   parseXmlToGraph(xmlDoc, graph)
 }
 
-function xmlWireConnections() {
+function xmlWireConnections () {
   const list = graph.getModel().cells
   for (const component of Object.values(list)) {
     const children = component.children
