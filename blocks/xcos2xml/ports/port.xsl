@@ -22,6 +22,9 @@
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />
             </xsl:attribute>
+            <xsl:attribute name="ordering">
+              <xsl:value-of select="@ordering" />
+            </xsl:attribute>
             <xsl:attribute name="vertex">1</xsl:attribute>
             <xsl:attribute name="CellType">Pin</xsl:attribute>
             <xsl:attribute name="ParentComponent">
@@ -32,7 +35,7 @@
             <xsl:attribute name="tarx">0</xsl:attribute>
             <xsl:attribute name="tary">0</xsl:attribute>
             <mxGeometry>
-              <xsl:variable name="numerator" select="2 * position() - 1" />
+              <xsl:variable name="numerator" select="2 * @ordering - 1" />
               <xsl:attribute name="y">
                 <xsl:value-of select="$numerator div (2 * number($explicitInputPorts + $implicitInputPorts))"/>
               </xsl:attribute>
@@ -54,6 +57,9 @@
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />
             </xsl:attribute>
+            <xsl:attribute name="ordering">
+              <xsl:value-of select="@ordering" />
+            </xsl:attribute>
             <xsl:attribute name="vertex">1</xsl:attribute>
             <xsl:attribute name="CellType">Pin</xsl:attribute>
             <xsl:attribute name="ParentComponent">
@@ -64,7 +70,7 @@
             <xsl:attribute name="tarx">0</xsl:attribute>
             <xsl:attribute name="tary">0</xsl:attribute>
             <mxGeometry>
-              <xsl:variable name="numerator" select="2 * position() - 1" />
+              <xsl:variable name="numerator" select="2 * @ordering - 1" />
               <xsl:attribute name="x">1</xsl:attribute>
               <xsl:attribute name="y">
                 <xsl:value-of select="$numerator div (2 * number($explicitOutputPorts + $implicitOutputPorts))"/>
@@ -87,6 +93,9 @@
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />
             </xsl:attribute>
+            <xsl:attribute name="ordering">
+              <xsl:value-of select="@ordering" />
+            </xsl:attribute>
             <xsl:attribute name="vertex">1</xsl:attribute>
             <xsl:attribute name="CellType">Pin</xsl:attribute>
             <xsl:attribute name="ParentComponent">
@@ -97,7 +106,7 @@
             <xsl:attribute name="tarx">0</xsl:attribute>
             <xsl:attribute name="tary">0</xsl:attribute>
             <mxGeometry>
-              <xsl:variable name="numerator" select="2 * position() - 1" />
+              <xsl:variable name="numerator" select="2 * @ordering - 1" />
               <xsl:attribute name="x">
                 <xsl:value-of select="$numerator div (2 * number($commandPorts))"/>
               </xsl:attribute>
@@ -120,6 +129,9 @@
             <xsl:attribute name="id">
               <xsl:value-of select="@id" />
             </xsl:attribute>
+            <xsl:attribute name="ordering">
+              <xsl:value-of select="@ordering" />
+            </xsl:attribute>
             <xsl:attribute name="vertex">1</xsl:attribute>
             <xsl:attribute name="CellType">Pin</xsl:attribute>
             <xsl:attribute name="ParentComponent">
@@ -130,7 +142,7 @@
             <xsl:attribute name="tarx">0</xsl:attribute>
             <xsl:attribute name="tary">0</xsl:attribute>
             <mxGeometry>
-              <xsl:variable name="numerator" select="2 * position() - 1" />
+              <xsl:variable name="numerator" select="2 * @ordering - 1" />
               <xsl:attribute name="x">
                 <xsl:value-of select="$numerator div (2 * number($controlPorts))"/>
               </xsl:attribute>
