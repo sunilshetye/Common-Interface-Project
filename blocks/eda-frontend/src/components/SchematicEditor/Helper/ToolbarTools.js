@@ -352,7 +352,7 @@ export function renderXML () {
   parseXmlToGraph(xmlDoc, graph)
 }
 
-const PORTDIRECTIONS = {
+export const PORTDIRECTIONS = {
   UNK: 0,
   LOR: 4,
   L2T: 5,
@@ -364,7 +364,7 @@ const PORTDIRECTIONS = {
   T2L: 15
 }
 
-function getRotationParameters (stylename, rotation) {
+export function getRotationParameters (stylename, rotation) {
   const RotateNames = ['ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort',
     'ExplicitInputPort', 'ControlPort', 'ExplicitOutputPort', 'CommandPort']
 

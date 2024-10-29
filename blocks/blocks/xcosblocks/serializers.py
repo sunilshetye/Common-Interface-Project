@@ -100,6 +100,7 @@ class NewBlockPortSerializer(serializers.ModelSerializer):
             'port_part',
             'port_dmg',
             'port_type',
+            'port_rotation',
         ]
 
 
