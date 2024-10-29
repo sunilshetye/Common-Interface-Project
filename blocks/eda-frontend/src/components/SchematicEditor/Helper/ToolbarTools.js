@@ -402,6 +402,7 @@ function parseXmlToGraph (xmlDoc, graph) {
   let cells = xmlDoc.documentElement.children[0].children
   let cellslength = cells.length
   let remainingcells = []
+  let portCount
   try {
     console.log('cellslength=', cellslength)
     while (cellslength > 0 && cellslength !== oldcellslength) {
@@ -410,9 +411,17 @@ function parseXmlToGraph (xmlDoc, graph) {
         const cellAttrs = cell.attributes
         const cellChildren = cell.children
         if (cellAttrs.CellType?.value === 'Component') { // is component
+          portCount = {
+            ExplicitInputPort: 0,
+            ImplicitInputPort: 0,
+            ControlPort: 0,
+            ExplicitOutputPort: 0,
+            ImplicitOutputPort: 0,
+            CommandPort: 0
+          }
           const style = cellAttrs.style.value
           const styleObject = styleToObject(style)
-          // console.log(styleObject)
+          console.log(styleObject)
           if (styleObject.rotation === undefined) {
             blockrotation = 0
           } else {
@@ -479,20 +488,23 @@ function parseXmlToGraph (xmlDoc, graph) {
             portrotation = parseInt(styleObject.rotation)
           }
           let rotate = portrotation - blockrotation
-          if (stylename == 'ControlPort' || stylename == 'CommandPort') {
+          if (stylename === 'ControlPort' || stylename === 'CommandPort') {
             rotate -= 90
+          }
+          if (rotate < 0) {
+            rotate += 360
           }
 
           const vertexId = cellAttrs.id.value
           const geom = cellChildren[0].attributes
-
+          console.log('CELLATTR:', cellAttrs)
           let xPos = (geom.x !== undefined) ? Number(geom.x.value) : 0
           let yPos = (geom.y !== undefined) ? Number(geom.y.value) : 0
-          if (rotate != 0) {
-            console.log('Ports:', styleObject)
-            console.log('DIFF:', rotate)
-            console.log(geom, xPos, yPos, portSize)
-          }
+          // if (rotate != 0) {
+          console.log('Ports:', styleObject)
+          console.log('DIFF:', rotate)
+          console.log(geom, xPos, yPos, portSize)
+          // }
           let pointX
           let pointY
 
@@ -540,40 +552,59 @@ function parseXmlToGraph (xmlDoc, graph) {
               pointY = -portSize / 2
               break
           }
-          const xPos_old = xPos
+          const xPosOld = xPos
           switch (rotatename.portdirection) {
             case L2T:
               xPos = yPos
-              yPos = xPos_old
+              yPos = xPosOld
               break
             case L2R:
-              xPos = 1 - xPos_old
-              yPos = yPos
+              xPos = 1 - xPosOld
+              // yPos = yPos
               break
             case L2B:
               xPos = yPos
-              yPos = 1 - xPos_old
+              yPos = 1 - xPosOld
               break
             case T2R:
               xPos = 1 - yPos
-              yPos = xPos_old
+              yPos = xPosOld
               break
             case T2B:
-              xPos = xPos_old
+              xPos = xPosOld
               yPos = 1 - yPos
               break
             case T2L:
               xPos = yPos
-              yPos = xPos_old
+              yPos = xPosOld
               break
           }
 
           const point = new mxPoint(pointX, pointY)
           const vp = graph.insertVertex(v1, vertexId, null, xPos, yPos, portSize, portSize, style)
+
           vp.geometry.relative = true
           vp.geometry.offset = point
           vp.CellType = 'Pin'
+          let orderingname
+          if (stylename === 'ImplicitInputPort') {
+            orderingname = 'ExplicitInputPort'
+          } else if (stylename === 'ImplicitOutputPort') {
+            orderingname = 'ExplicitOutputPort'
+          } else {
+            orderingname = stylename
+          }
+          portCount[orderingname] += 1
+          let ordering
+          if (cellAttrs.ordering) {
+            ordering = cellAttrs.ordering
+          } else {
+            ordering = portCount[orderingname]
+          }
+
+          vp.ordering = ordering
           vp.ParentComponent = v1.id
+          // console.log('vp.ordering =:', cellAttrs.ordering)
         } else if (cellAttrs.edge) { // is edge
           const edgeId = cellAttrs.id.value
 

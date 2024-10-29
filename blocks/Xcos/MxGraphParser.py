@@ -285,7 +285,11 @@ for root in model:
                     else:
                         orderingname = stylename
                     portCount[ParentComponent][orderingname] += 1
-                    ordering = portCount[ParentComponent][orderingname]
+
+                    try:
+                        ordering = attrib['ordering']
+                    except KeyError:
+                        ordering = portCount[ParentComponent][orderingname]
                     geometry = dict(componentGeometry)
                     mxGeometry = cell.find('mxGeometry')
                     if mxGeometry is not None:
