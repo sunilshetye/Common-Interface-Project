@@ -1753,8 +1753,8 @@
     initial_display_parameter: ''
     simulation_function: Ground
     block_image_path: palettes/Ground.png
-    block_width: 20
-    block_height: 20
+    block_width: 40
+    block_height: 40
     categories:
     - 9
 - model: xcosblocks.newblock
@@ -1796,7 +1796,7 @@
     simulation_function: Inductor
     block_image_path: palettes/Inductor.png
     block_width: 40
-    block_height: 18
+    block_height: 40
     categories:
     - 9
 - model: xcosblocks.newblock
@@ -1907,8 +1907,8 @@
     initial_display_parameter: 1,1
     simulation_function: SineVoltage
     block_image_path: palettes/SineVoltage.png
-    block_width: 40
-    block_height: 40
+    block_width: 50
+    block_height: 60
     categories:
     - 9
 - model: xcosblocks.newblock
@@ -12567,7 +12567,7 @@
     port_order: 1
     port_name: '1'
     port_number: '1'
-    port_x: -10
+    port_x: -20
     port_y: 0
     port_orientation: ImplicitInputPort
     port_part: 1
@@ -12983,7 +12983,7 @@
     port_order: 1
     port_name: '1'
     port_number: '1'
-    port_x: -20
+    port_x: -25
     port_y: 0
     port_orientation: ImplicitInputPort
     port_part: 1
@@ -12996,7 +12996,7 @@
     port_order: 2
     port_name: '2'
     port_number: '2'
-    port_x: 20
+    port_x: 25
     port_y: 0
     port_orientation: ImplicitOutputPort
     port_part: 1
