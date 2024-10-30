@@ -49,7 +49,7 @@ outmodel.set('as', 'model')
 def check_point_on_array(array, point, left_right_direction=True):
     if array is None:
         return False, array, []
-
+    
     pointX = float(point['x'])
     pointY = float(point['y'])
 
@@ -347,7 +347,7 @@ for root in model:
                     if sourceType in ['ExplicitInputPort', 'ExplicitOutputPort', 'CommandPort', 'ControlPort'] and \
                             targetType == sourceType:
                         print(attribid, 'cannot connect two ports of', sourceType, 'and', targetType)
-                    elif sourceType in ['ExplicitLink', 'ImplicitLink', 'CommandControlLink'] and \
+                    elif sourceType in ['ExplicitLink', 'CommandControlLink'] and \
                             targetType == sourceType:
                         print(attribid, 'cannot connect two links of', sourceType, 'and', targetType)
                     elif sourceType in ['ExplicitOutputPort'] and \
@@ -379,14 +379,17 @@ for root in model:
 
                     split_point = None
 
-                    if sourceVertex in blkgeometry:
-                        vertex = blkgeometry[sourceVertex]
-                        point = {'x': vertex['x'], 'y': vertex['y']}
-                        waypoints.insert(0, point)
-                    elif 'tarx' in attrib and 'tary' in attrib:
+                    print('targetVertex:', targetVertex, 'blkgeometry:', targetVertex in blkgeometry)
+
+                    if 'tarx' in attrib and 'tary' in attrib:
                         point = {'x': attrib['tarx'], 'y': attrib['tary']}
                         split_point = point
                         waypoints.insert(0, point)
+                    elif sourceVertex in blkgeometry:
+                        vertex = blkgeometry[sourceVertex]
+                        point = {'x': vertex['x'], 'y': vertex['y']}
+                        waypoints.insert(0, point)
+                    
 
                     if targetVertex in blkgeometry:
                         vertex = blkgeometry[targetVertex]
@@ -430,6 +433,7 @@ for (attribid, sourceVertex, targetVertex, sourceType, targetType, style, waypoi
     except KeyError:
         pass
 
+    print('split_point:', split_point)
     result, i, left_array, right_array = identify_segment(linkSegments, split_point)
     if not result:
         sys.exit(0)
