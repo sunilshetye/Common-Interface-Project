@@ -1,7 +1,12 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ext="http://exslt.org/common"
+  exclude-result-prefixes="xsl ext"
+>
     <xsl:template match="@*|node()">
         <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
+            <xsl:apply-templates select="@*|node()" />
         </xsl:copy>
     </xsl:template>
 
@@ -47,10 +52,10 @@
       <xsl:param name="y" />
       <xsl:param name="parent" />
 
-    <!-- generate new primary link one id -->
-      <xsl:variable name="newidone" >
+      <!-- generate new primary link one id -->
+      <xsl:variable name="newidone">
         <xsl:choose>
-          <xsl:when test="$targetonelink/@id != '' and $sourceonelink/@id != ''">       
+          <xsl:when test="$targetonelink/@id != '' and $sourceonelink/@id != ''">
             <xsl:value-of select="concat($targetonelink/@id, generate-id())" />
           </xsl:when>
           <xsl:when test="$targetonelink/@id != ''">
@@ -65,59 +70,47 @@
         </xsl:choose>
       </xsl:variable>
 
-<!-- generate new primary link one -->
-        <xsl:if test="$targetonelink/@id != '' and $sourceonelink/@id != ''">
-
-      <xsl:element name="{$linktype}">
-        <xsl:attribute name="id">
-          <xsl:value-of select="$newidone" />
-        </xsl:attribute>
-        <xsl:attribute name="parent">
-          <xsl:value-of select="$parent" />
-        </xsl:attribute>
-        <xsl:attribute name="source">
-          <xsl:value-of select="$targetonelinksrcortgt" /> <!-- removed by suchita $targetonelink/@source-->
-        </xsl:attribute>
-        <xsl:attribute name="target">
-          <xsl:value-of select="$sourceonelinksrcortgt" /> <!-- removed by suchita sourceonelink/@target-->
-        </xsl:attribute>
-        <xsl:attribute name="style">
-          <xsl:value-of select="$linktype" />
-        </xsl:attribute>
-        <xsl:attribute name="value"></xsl:attribute>
-        <mxGeometry relative="1" as="geometry">
-          <Array as="points">
-            <xsl:element name="waypoint">
-          <xsl:attribute name="waypoint1">
-            <xsl:value-of select="$targetonewaypoints" />
+      <xsl:if test="$targetonelink/@id != '' and $sourceonelink/@id != ''">
+        <!-- generate new primary link one -->
+        <xsl:element name="{$linktype}">
+          <xsl:attribute name="id">
+            <xsl:value-of select="$newidone" />
           </xsl:attribute>
-          <xsl:attribute name="waypoint2">
-            <xsl:value-of select="$sourceonewaypoints" />
+          <xsl:attribute name="parent">
+            <xsl:value-of select="$parent" />
           </xsl:attribute>
-          <xsl:attribute name="waypoint3">
-            <xsl:value-of select="$sourcetwowaypoints" /> <!-- removed by suchita $targetonelink/@source-->
+          <xsl:attribute name="source">
+            <xsl:value-of select="$targetonelinksrcortgt" /> <!-- removed by suchita $targetonelink/@source-->
           </xsl:attribute>
-          </xsl:element>
-            <!-- <xsl:for-each select="$targetonewaypoints">
-              <xsl:copy-of select="." />
+          <xsl:attribute name="target">
+            <xsl:value-of select="$sourceonelinksrcortgt" /> <!-- removed by suchita sourceonelink/@target-->
+          </xsl:attribute>
+          <xsl:attribute name="style">
+            <xsl:value-of select="$linktype" />
+          </xsl:attribute>
+          <xsl:attribute name="value"></xsl:attribute>
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <xsl:for-each select="$targetonewaypoints">
+                <xsl:copy-of select="." />
+              </xsl:for-each>
+              <xsl:for-each select="$sourceonewaypoints">
+                <xsl:copy-of select="." />
+              </xsl:for-each>
+            </Array>
+            <xsl:for-each select="$targetonelink/mxGeometry/mxPoint">
+              <xsl:copy>
+                <xsl:copy-of select="@*" />
+              </xsl:copy>
             </xsl:for-each>
-            <xsl:for-each select="$sourceonewaypoints">
-              <xsl:copy-of select="." />
-            </xsl:for-each> -->
-          </Array>
-          <xsl:for-each select="$targetonelink/mxGeometry/mxPoint">
-            <xsl:copy>
-              <xsl:copy-of select="@*"/>
-            </xsl:copy>
-          </xsl:for-each>
-        </mxGeometry>
-      </xsl:element>
+          </mxGeometry>
+        </xsl:element>
       </xsl:if>
 
       <!-- generate new primary link two id -->
-      <xsl:variable name="newidtwo" >
+      <xsl:variable name="newidtwo">
         <xsl:choose>
-          <xsl:when test="($targetonelink/@id != '' or $sourceonelink/@id != '') and $sourcetwolink/@id != ''">       
+          <xsl:when test="($targetonelink/@id != '' or $sourceonelink/@id != '') and $sourcetwolink/@id != ''">
             <xsl:value-of select="concat($sourcetwolink/@id, generate-id($sourcetwolink))" />
           </xsl:when>
           <xsl:otherwise>
@@ -126,9 +119,9 @@
         </xsl:choose>
       </xsl:variable>
 
-      <xsl:variable name="newidthree" >
+      <xsl:variable name="newidthree">
         <xsl:choose>
-          <xsl:when test="$targetonelink/@id != '' and $sourceonelink/@id != ''">       
+          <xsl:when test="$targetonelink/@id != '' and $sourceonelink/@id != ''">
             <xsl:value-of select="$newidone" />
           </xsl:when>
           <xsl:when test="$targetonelink/@id != ''">
@@ -143,12 +136,12 @@
         </xsl:choose>
       </xsl:variable>
 
-      <xsl:variable name="newidfour" >
+      <xsl:variable name="newidfour">
         <xsl:choose>
-          <xsl:when test="$targetonelink/@id != '' and $sourceonelink/@id != ''">       
+          <xsl:when test="$targetonelink/@id != '' and $sourceonelink/@id != ''">
             <xsl:value-of select="$newidone" />
           </xsl:when>
-          
+
           <xsl:otherwise>
             <xsl:value-of select="$newidtwo" />
           </xsl:otherwise>
@@ -185,9 +178,9 @@
             <xsl:attribute name="as">sourcePoint</xsl:attribute>
           </mxPoint>
           <Array as="points">
-            <!-- <xsl:for-each select="$sourcetwowaypoints">
+            <xsl:for-each select="$sourcetwowaypoints">
               <xsl:copy-of select="." />
-            </xsl:for-each> -->
+            </xsl:for-each>
           </Array>
         </mxGeometry>
       </xsl:element>
@@ -196,56 +189,56 @@
       <!-- foreach loop, link copy, source change -->
       <xsl:for-each select="$targetonesrcsecondlink">
         <xsl:copy>
-          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="@*" />
           <xsl:attribute name="source">
             <xsl:value-of select="$newidfour" />
           </xsl:attribute>
-          <xsl:copy-of select="node()"/>
+          <xsl:copy-of select="node()" />
         </xsl:copy>
       </xsl:for-each>
       <xsl:for-each select="$targetonetgtsecondlink">
         <xsl:copy>
-          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="@*" />
           <xsl:attribute name="target">
             <xsl:value-of select="$newidfour" />
           </xsl:attribute>
-          <xsl:copy-of select="node()"/>
+          <xsl:copy-of select="node()" />
         </xsl:copy>
       </xsl:for-each>
       <xsl:for-each select="$sourceonesrcsecondlink">
         <xsl:copy>
-          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="@*" />
           <xsl:attribute name="source">
             <xsl:value-of select="$newidfour" />
           </xsl:attribute>
-          <xsl:copy-of select="node()"/>
+          <xsl:copy-of select="node()" />
         </xsl:copy>
       </xsl:for-each>
       <xsl:for-each select="$sourceonetgtsecondlink">
         <xsl:copy>
-          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="@*" />
           <xsl:attribute name="target">
             <xsl:value-of select="$newidfour" />
           </xsl:attribute>
-          <xsl:copy-of select="node()"/>
+          <xsl:copy-of select="node()" />
         </xsl:copy>
       </xsl:for-each>
       <xsl:for-each select="$sourcetwosrcsecondlink">
         <xsl:copy>
-          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="@*" />
           <xsl:attribute name="source">
             <xsl:value-of select="$newidtwo" />
           </xsl:attribute>
-          <xsl:copy-of select="node()"/>
+          <xsl:copy-of select="node()" />
         </xsl:copy>
       </xsl:for-each>
       <xsl:for-each select="$sourcetwotgtsecondlink">
         <xsl:copy>
-          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="@*" />
           <xsl:attribute name="target">
             <xsl:value-of select="$newidtwo" />
           </xsl:attribute>
-          <xsl:copy-of select="node()"/>
+          <xsl:copy-of select="node()" />
         </xsl:copy>
       </xsl:for-each>
     </xsl:template>
@@ -288,26 +281,29 @@
           <xsl:variable name="sourceonewaypoints" select="$sourceonelink/mxGeometry/Array/mxPoint" />
           <xsl:variable name="sourcetwowaypoints" select="$sourcetwolink/mxGeometry/Array/mxPoint" />
           <xsl:call-template name="links">
-            <xsl:with-param name="linktype" select="$linktype"/>
-            <xsl:with-param name="targetonelink" select="$targetonelink"/>
-            <xsl:with-param name="targetonelinksrcortgt" select="$targetonelink/@source"/>
-            <xsl:with-param name="sourceonelink" select="$sourceonelink"/>
-            <xsl:with-param name="sourceonelinksrcortgt" select="$sourceonelink/@target"/>
-            <xsl:with-param name="sourcetwolink" select="$sourcetwolink"/>
-            <xsl:with-param name="sourcetwolinksrcortgt" select="$sourcetwolink/@target"/>
-            <xsl:with-param name="sourcethreelink" select="$sourcethreelink"/>
-            <xsl:with-param name="sourcethreelinksrcortgt" select="$sourcethreelink/@target"/>
-            <xsl:with-param name="targetonesrcsecondlink" select="$targetonesrcsecondlink"/>
-             <xsl:with-param name="targetonetgtsecondlink" select="$targetonetgtsecondlink"/>
-            <xsl:with-param name="sourceonesrcsecondlink" select="$sourceonesrcsecondlink"/>
-            <xsl:with-param name="sourceonetgtsecondlink" select="$sourceonetgtsecondlink"/>
-            <xsl:with-param name="sourcetwosrcsecondlink" select="$sourcetwosrcsecondlink"/>
-            <xsl:with-param name="sourcetwotgtsecondlink" select="$sourcetwotgtsecondlink"/>
-            <xsl:with-param name="sourcethreesrcsecondlink" select="$sourcethreesrcsecondlink"/>
-            <xsl:with-param name="sourcethreetgtsecondlink" select="$sourcethreetgtsecondlink"/>
-            <xsl:with-param name="x" select="$x"/>
-            <xsl:with-param name="y" select="$y"/>
-            <xsl:with-param name="parent" select="$parent"/>
+            <xsl:with-param name="linktype" select="$linktype" />
+            <xsl:with-param name="targetonelink" select="$targetonelink" />
+            <xsl:with-param name="targetonelinksrcortgt" select="$targetonelink/@source" />
+            <xsl:with-param name="sourceonelink" select="$sourceonelink" />
+            <xsl:with-param name="sourceonelinksrcortgt" select="$sourceonelink/@target" />
+            <xsl:with-param name="sourcetwolink" select="$sourcetwolink" />
+            <xsl:with-param name="sourcetwolinksrcortgt" select="$sourcetwolink/@target" />
+            <xsl:with-param name="sourcethreelink" select="$sourcethreelink" />
+            <xsl:with-param name="sourcethreelinksrcortgt" select="$sourcethreelink/@target" />
+            <xsl:with-param name="targetonesrcsecondlink" select="$targetonesrcsecondlink" />
+             <xsl:with-param name="targetonetgtsecondlink" select="$targetonetgtsecondlink" />
+            <xsl:with-param name="sourceonesrcsecondlink" select="$sourceonesrcsecondlink" />
+            <xsl:with-param name="sourceonetgtsecondlink" select="$sourceonetgtsecondlink" />
+            <xsl:with-param name="sourcetwosrcsecondlink" select="$sourcetwosrcsecondlink" />
+            <xsl:with-param name="sourcetwotgtsecondlink" select="$sourcetwotgtsecondlink" />
+            <xsl:with-param name="sourcethreesrcsecondlink" select="$sourcethreesrcsecondlink" />
+            <xsl:with-param name="sourcethreetgtsecondlink" select="$sourcethreetgtsecondlink" />
+            <xsl:with-param name="targetonewaypoints" select="$targetonewaypoints" />
+            <xsl:with-param name="sourceonewaypoints" select="$sourceonewaypoints" />
+            <xsl:with-param name="sourcetwowaypoints" select="$sourcetwowaypoints" />
+            <xsl:with-param name="x" select="$x" />
+            <xsl:with-param name="y" select="$y" />
+            <xsl:with-param name="parent" select="$parent" />
           </xsl:call-template>
         </xsl:when>
 
@@ -329,35 +325,33 @@
           <xsl:variable name="sourcetwotgtsecondlink" select="key('k-commandtgtlink', $sourcecommandtwolink/@id)" />
           <xsl:variable name="sourcethreesrcsecondlink" select="key('k-commandsrclink', $sourcecommandthreelink/@id)" />
           <xsl:variable name="sourcethreetgtsecondlink" select="key('k-commandtgtlink', $sourcecommandthreelink/@id)" />
-
           <xsl:variable name="targetonewaypoints" select="$targetcommandonelink/mxGeometry/Array/mxPoint" />
           <xsl:variable name="sourceonewaypoints" select="$sourcecommandonelink/mxGeometry/Array/mxPoint" />
           <xsl:variable name="sourcetwowaypoints" select="$sourcecommandtwolink/mxGeometry/Array/mxPoint" />
           <xsl:call-template name="links">
-            <xsl:with-param name="linktype" select="$linktype"/>
-            <xsl:with-param name="targetonelink" select="$targetcommandonelink"/>
-            <xsl:with-param name="targetonelinksrcortgt" select="$targetcommandonelink/@source"/>
-            <xsl:with-param name="sourceonelink" select="$sourcecommandonelink"/>
-            <xsl:with-param name="sourceonelinksrcortgt" select="$sourcecommandonelink/@target"/>
-            <xsl:with-param name="sourcetwolink" select="$sourcecommandtwolink"/>
-            <xsl:with-param name="sourcetwolinksrcortgt" select="$sourcecommandtwolink/@target"/>
-            <xsl:with-param name="sourcethreelink" select="$sourcecommandthreelink"/>
-            <xsl:with-param name="sourcethreelinksrcortgt" select="$sourcecommandthreelink/@target"/>
-            <xsl:with-param name="targetonesrcsecondlink" select="$targetonesrcsecondlink"/>
-            <xsl:with-param name="targetonetgtsecondlink" select="$targetonetgtsecondlink"/>
-            <xsl:with-param name="sourceonesrcsecondlink" select="$sourceonesrcsecondlink"/>
-            <xsl:with-param name="sourceonetgtsecondlink" select="$sourceonetgtsecondlink"/>
-            <xsl:with-param name="sourcetwosrcsecondlink" select="$sourcetwosrcsecondlink"/>
-            <xsl:with-param name="sourcetwotgtsecondlink" select="$sourcetwotgtsecondlink"/>
-            <xsl:with-param name="sourcethreesrcsecondlink" select="$sourcethreesrcsecondlink"/>
-            <xsl:with-param name="sourcethreetgtsecondlink" select="$sourcethreetgtsecondlink"/>
-
-            <xsl:with-param name="targetonewaypoints" select="$targetonewaypoints"/>
-            <xsl:with-param name="sourceonewaypoints" select="$sourceonewaypoints"/>
-            <xsl:with-param name="sourcetwowaypoints" select="$sourcetwowaypoints"/>
-            <xsl:with-param name="x" select="$x"/>
-            <xsl:with-param name="y" select="$y"/>
-            <xsl:with-param name="parent" select="$parent"/>
+            <xsl:with-param name="linktype" select="$linktype" />
+            <xsl:with-param name="targetonelink" select="$targetcommandonelink" />
+            <xsl:with-param name="targetonelinksrcortgt" select="$targetcommandonelink/@source" />
+            <xsl:with-param name="sourceonelink" select="$sourcecommandonelink" />
+            <xsl:with-param name="sourceonelinksrcortgt" select="$sourcecommandonelink/@target" />
+            <xsl:with-param name="sourcetwolink" select="$sourcecommandtwolink" />
+            <xsl:with-param name="sourcetwolinksrcortgt" select="$sourcecommandtwolink/@target" />
+            <xsl:with-param name="sourcethreelink" select="$sourcecommandthreelink" />
+            <xsl:with-param name="sourcethreelinksrcortgt" select="$sourcecommandthreelink/@target" />
+            <xsl:with-param name="targetonesrcsecondlink" select="$targetonesrcsecondlink" />
+            <xsl:with-param name="targetonetgtsecondlink" select="$targetonetgtsecondlink" />
+            <xsl:with-param name="sourceonesrcsecondlink" select="$sourceonesrcsecondlink" />
+            <xsl:with-param name="sourceonetgtsecondlink" select="$sourceonetgtsecondlink" />
+            <xsl:with-param name="sourcetwosrcsecondlink" select="$sourcetwosrcsecondlink" />
+            <xsl:with-param name="sourcetwotgtsecondlink" select="$sourcetwotgtsecondlink" />
+            <xsl:with-param name="sourcethreesrcsecondlink" select="$sourcethreesrcsecondlink" />
+            <xsl:with-param name="sourcethreetgtsecondlink" select="$sourcethreetgtsecondlink" />
+            <xsl:with-param name="targetonewaypoints" select="$targetonewaypoints" />
+            <xsl:with-param name="sourceonewaypoints" select="$sourceonewaypoints" />
+            <xsl:with-param name="sourcetwowaypoints" select="$sourcetwowaypoints" />
+            <xsl:with-param name="x" select="$x" />
+            <xsl:with-param name="y" select="$y" />
+            <xsl:with-param name="parent" select="$parent" />
           </xsl:call-template>
         </xsl:when>
 
@@ -379,13 +373,13 @@
           <xsl:variable name="sourcetwotgtsecondlink" select="key('k-implicittgtlink', $sourceimplicittwolink/@id)" />
           <xsl:variable name="sourcethreesrcsecondlink" select="key('k-implicitsrclink', $sourceimplicitthreelink/@id)" />
           <xsl:variable name="sourcethreetgtsecondlink" select="key('k-implicittgtlink', $sourceimplicitthreelink/@id)" />
-          <xsl:variable name="targetonelinksort" >
+          <xsl:variable name="targetonelinksort">
             <xsl:choose>
               <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@source">
-                <xsl:value-of select="$targetimplicitonelink/@target"/>
+                <xsl:value-of select="$targetimplicitonelink/@target" />
               </xsl:when>
               <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@target">
-                <xsl:value-of select="$targetimplicitonelink/@source"/>
+                <xsl:value-of select="$targetimplicitonelink/@source" />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:text>No match found</xsl:text>
@@ -393,13 +387,13 @@
             </xsl:choose>
           </xsl:variable>
 
-          <xsl:variable name="sourceonelinksort" >
+          <xsl:variable name="sourceonelinksort">
             <xsl:choose>
               <xsl:when test="$sourceimplicitoneid = $sourceimplicitonelink/@source">
-                <xsl:value-of select="$sourceimplicitonelink/@target"/>
+                <xsl:value-of select="$sourceimplicitonelink/@target" />
               </xsl:when>
               <xsl:when test="$sourceimplicitoneid = $sourceimplicitonelink/@target">
-                <xsl:value-of select="$sourceimplicitonelink/@source"/>
+                <xsl:value-of select="$sourceimplicitonelink/@source" />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:text>No match found</xsl:text>
@@ -407,13 +401,13 @@
             </xsl:choose>
           </xsl:variable>
 
-          <xsl:variable name="sourcetwolinksort" >
+          <xsl:variable name="sourcetwolinksort">
             <xsl:choose>
               <xsl:when test="$sourceimplicittwoid = $sourceimplicittwolink/@source">
-                <xsl:value-of select="$sourceimplicittwolink/@target"/>
+                <xsl:value-of select="$sourceimplicittwolink/@target" />
               </xsl:when>
               <xsl:when test="$sourceimplicittwoid = $sourceimplicittwolink/@target">
-                <xsl:value-of select="$sourceimplicittwolink/@source"/>
+                <xsl:value-of select="$sourceimplicittwolink/@source" />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:text>No match found</xsl:text>
@@ -421,13 +415,13 @@
             </xsl:choose>
           </xsl:variable>
 
-          <xsl:variable name="sourcethreelinksort" >
+          <xsl:variable name="sourcethreelinksort">
             <xsl:choose>
               <xsl:when test="$sourceimplicitthreeid = $sourceimplicitthreelink/@source">
-                <xsl:value-of select="$sourceimplicitthreelink/@target"/>
+                <xsl:value-of select="$sourceimplicitthreelink/@target" />
               </xsl:when>
               <xsl:when test="$sourceimplicitthreeid = $sourceimplicitthreelink/@target">
-                <xsl:value-of select="$sourceimplicitthreelink/@source"/>
+                <xsl:value-of select="$sourceimplicitthreelink/@source" />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:text>No match found</xsl:text>
@@ -435,136 +429,126 @@
             </xsl:choose>
           </xsl:variable>
 
-          <xsl:variable name="targetonewaypoints" >
-            <xsl:choose>
-              <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@source">
-                <array>
+          <xsl:variable name="tmptargetonewaypoints">
+            <waypoints>
+              <xsl:choose>
+                <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@target">
                   <xsl:for-each select="$targetimplicitonelink/mxGeometry/Array/mxPoint">
                     <xsl:sort select="position()" order="descending"/>
                     <xsl:copy-of select="."/>
                   </xsl:for-each>
-                </array>
-              </xsl:when>
-              <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@target">
-                <xsl:value-of select="$targetimplicitonelink/mxGeometry/Array/mxPoint"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text>No match found</xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
+                </xsl:when>
+                <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@source">
+                  <xsl:copy-of select="$targetimplicitonelink/mxGeometry/Array/mxPoint" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>No match found</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </waypoints>
           </xsl:variable>
-          
-          <xsl:variable name="sourceonewaypoints" >
-          <xsl:choose>
-              <xsl:when test="$sourceimplicitoneid = $sourceimplicitonelink/@target">
-                <array>
-                <xsl:for-each select="$sourceimplicitonelink/mxGeometry/Array/mxPoint">
-                  <xsl:sort select="position()" order="descending"/>
-                  <xsl:copy-of select="."/>
-                </xsl:for-each>
-                </array>
-              </xsl:when>
-              <xsl:when test="$sourceimplicitoneid = $sourceimplicitonelink/@source">
-                <xsl:value-of select="$sourceimplicitonelink/mxGeometry/Array/mxPoint"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text>No match found</xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable>
+          <xsl:variable name="targetonewaypoints" select="ext:node-set($tmptargetonewaypoints)/waypoints/mxPoint" />
 
-          <xsl:variable name="sourcetwowaypoints" >
-          <xsl:choose>
-              <xsl:when test="$sourceimplicittwoid = $sourceimplicittwolink/@target">
-                <array>
-                <xsl:for-each select="$sourceimplicittwolink/mxGeometry/Array/mxPoint">
-                  <xsl:sort select="position()" order="descending"/>
-                  <xsl:copy-of select="."/>
-                </xsl:for-each>
-                </array>
-              </xsl:when>
-              <xsl:when test="$sourceimplicittwoid = $sourceimplicittwolink/@source">
-                <xsl:value-of select="$sourceimplicittwolink/mxGeometry/Array/mxPoint"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text>No match found</xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
+          <xsl:variable name="tmpsourceonewaypoints">
+            <waypoints>
+              <xsl:choose>
+                <xsl:when test="$sourceimplicitoneid = $sourceimplicitonelink/@target">
+                  <xsl:for-each select="$sourceimplicitonelink/mxGeometry/Array/mxPoint">
+                    <xsl:sort select="position()" order="descending"/>
+                    <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                </xsl:when>
+                <xsl:when test="$sourceimplicitoneid = $sourceimplicitonelink/@source">
+                  <xsl:copy-of select="$sourceimplicitonelink/mxGeometry/Array/mxPoint" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>No match found</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </waypoints>
           </xsl:variable>
+          <xsl:variable name="sourceonewaypoints" select="ext:node-set($tmpsourceonewaypoints)/waypoints/mxPoint" />
 
-          <xsl:element name="waypoint">
-          <xsl:attribute name="waypoint1">
-            <xsl:value-of select="count($targetonewaypoints)" />
-          </xsl:attribute>
-          <xsl:attribute name="waypoint2">
-            <xsl:value-of select="count($sourceonewaypoints)" />
-          </xsl:attribute>
-          <xsl:attribute name="waypoint3">
-            <xsl:value-of select="count($sourcetwowaypoints)" /> <!-- removed by suchita $targetonelink/@source-->
-          </xsl:attribute>
-          </xsl:element>
+          <xsl:variable name="tmpsourcetwowaypoints">
+            <waypoints>
+              <xsl:choose>
+                <xsl:when test="$sourceimplicittwoid = $sourceimplicittwolink/@target">
+                  <xsl:for-each select="$sourceimplicittwolink/mxGeometry/Array/mxPoint">
+                    <xsl:sort select="position()" order="descending"/>
+                    <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                </xsl:when>
+                <xsl:when test="$sourceimplicittwoid = $sourceimplicittwolink/@source">
+                  <xsl:copy-of select="$sourceimplicittwolink/mxGeometry/Array/mxPoint" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>No match found</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </waypoints>
+          </xsl:variable>
+          <xsl:variable name="sourcetwowaypoints" select="ext:node-set($tmpsourcetwowaypoints)/waypoints/mxPoint" />
 
           <xsl:call-template name="links">
-            <xsl:with-param name="linktype" select="$linktype"/>
-            <xsl:with-param name="targetonelink" select="$targetimplicitonelink"/>
-            <xsl:with-param name="targetonelinksrcortgt" select="$targetonelinksort"/>
-            <xsl:with-param name="sourceonelink" select="$sourceimplicitonelink"/>
-            <xsl:with-param name="sourceonelinksrcortgt" select="$sourceonelinksort"/>
-            <xsl:with-param name="sourcetwolink" select="$sourceimplicittwolink"/>
-            <xsl:with-param name="sourcetwolinksrcortgt" select="$sourcetwolinksort"/>
-            <xsl:with-param name="sourcethreelink" select="$sourceimplicitthreelink"/>
-            <xsl:with-param name="sourcethreelinksrcortgt" select="$sourcethreelinksort"/>
-            <xsl:with-param name="targetonesrcsecondlink" select="$targetonesrcsecondlink"/>
-            <xsl:with-param name="targetonetgtsecondlink" select="$targetonetgtsecondlink"/>
-            <xsl:with-param name="sourceonesrcsecondlink" select="$sourceonesrcsecondlink"/>
-            <xsl:with-param name="sourceonetgtsecondlink" select="$sourceonetgtsecondlink"/>
-            <xsl:with-param name="sourcetwosrcsecondlink" select="$sourcetwosrcsecondlink"/>
-            <xsl:with-param name="sourcetwotgtsecondlink" select="$sourcetwotgtsecondlink"/>
-            <xsl:with-param name="sourcethreesrcsecondlink" select="$sourcethreesrcsecondlink"/>
-            <xsl:with-param name="sourcethreetgtsecondlink" select="$sourcethreetgtsecondlink"/>
-
-            <xsl:with-param name="targetonewaypoints" select="$targetonewaypoints"/>
-            <xsl:with-param name="sourceonewaypoints" select="$sourceonewaypoints"/>
-            <xsl:with-param name="sourcetwowaypoints" select="$sourcetwowaypoints"/>
-            <xsl:with-param name="x" select="$x"/>
-            <xsl:with-param name="y" select="$y"/>
-            <xsl:with-param name="parent" select="$parent"/>
+            <xsl:with-param name="linktype" select="$linktype" />
+            <xsl:with-param name="targetonelink" select="$targetimplicitonelink" />
+            <xsl:with-param name="targetonelinksrcortgt" select="$targetonelinksort" />
+            <xsl:with-param name="sourceonelink" select="$sourceimplicitonelink" />
+            <xsl:with-param name="sourceonelinksrcortgt" select="$sourceonelinksort" />
+            <xsl:with-param name="sourcetwolink" select="$sourceimplicittwolink" />
+            <xsl:with-param name="sourcetwolinksrcortgt" select="$sourcetwolinksort" />
+            <xsl:with-param name="sourcethreelink" select="$sourceimplicitthreelink" />
+            <xsl:with-param name="sourcethreelinksrcortgt" select="$sourcethreelinksort" />
+            <xsl:with-param name="targetonesrcsecondlink" select="$targetonesrcsecondlink" />
+            <xsl:with-param name="targetonetgtsecondlink" select="$targetonetgtsecondlink" />
+            <xsl:with-param name="sourceonesrcsecondlink" select="$sourceonesrcsecondlink" />
+            <xsl:with-param name="sourceonetgtsecondlink" select="$sourceonetgtsecondlink" />
+            <xsl:with-param name="sourcetwosrcsecondlink" select="$sourcetwosrcsecondlink" />
+            <xsl:with-param name="sourcetwotgtsecondlink" select="$sourcetwotgtsecondlink" />
+            <xsl:with-param name="sourcethreesrcsecondlink" select="$sourcethreesrcsecondlink" />
+            <xsl:with-param name="sourcethreetgtsecondlink" select="$sourcethreetgtsecondlink" />
+            <xsl:with-param name="targetonewaypoints" select="$targetonewaypoints" />
+            <xsl:with-param name="sourceonewaypoints" select="$sourceonewaypoints" />
+            <xsl:with-param name="sourcetwowaypoints" select="$sourcetwowaypoints" />
+            <xsl:with-param name="x" select="$x" />
+            <xsl:with-param name="y" select="$y" />
+            <xsl:with-param name="parent" select="$parent" />
           </xsl:call-template>
         </xsl:when>
       </xsl:choose>
     </xsl:template>
 
     <xsl:template match="ExplicitInputPort | ExplicitOutputPort | ImplicitInputPort | ImplicitOutputPort | ControlPort | CommandPort">
-      <xsl:variable name="parentId" select="@parent"/>
-      <xsl:variable name="SPLIT" select="/XcosDiagram/mxGraphModel/root/SplitBlock[position() = 1]"/>
+      <xsl:variable name="parentId" select="@parent" />
+      <xsl:variable name="SPLIT" select="/XcosDiagram/mxGraphModel/root/SplitBlock[position() = 1]" />
 
-      <xsl:if test="$parentId != $SPLIT/@id" >
+      <xsl:if test="$parentId != $SPLIT/@id">
         <xsl:copy>
-          <xsl:copy-of select="@*"/>
-          <xsl:copy-of select="node()"/>
+          <xsl:copy-of select="@*" />
+          <xsl:copy-of select="node()" />
         </xsl:copy>
       </xsl:if>
     </xsl:template>
 
     <xsl:template match="ExplicitLink | CommandControlLink | ImplicitLink">
-      <xsl:variable name="sourceId" select="@source"/>
-      <xsl:variable name="sourceElement" select="//*[@id = $sourceId]"/>
-      <xsl:variable name="sourceElemId" select="$sourceElement/@parent"/>
-      <xsl:variable name="targetId" select="@target"/>
-      <xsl:variable name="targetElement" select="//*[@id = $targetId]"/>
-      <xsl:variable name="targetElemId" select="$targetElement/@parent"/>
-      <xsl:variable name="SPLITID" select="/XcosDiagram/mxGraphModel/root/SplitBlock[position() = 1]/@id"/>
+      <xsl:variable name="sourceId" select="@source" />
+      <xsl:variable name="sourceElement" select="//*[@id = $sourceId]" />
+      <xsl:variable name="sourceElemId" select="$sourceElement/@parent" />
+      <xsl:variable name="targetId" select="@target" />
+      <xsl:variable name="targetElement" select="//*[@id = $targetId]" />
+      <xsl:variable name="targetElemId" select="$targetElement/@parent" />
+      <xsl:variable name="SPLITID" select="/XcosDiagram/mxGraphModel/root/SplitBlock[position() = 1]/@id" />
 
       <xsl:if test="$sourceElemId != $SPLITID and $targetElemId != $SPLITID">
-        <xsl:variable name="tgtsrcid" select="//*[@id = $targetElement/@source]/@parent"/>
-        <xsl:variable name="srctgtid" select="//*[@id = $sourceElement/@target]/@parent"/>
-        <xsl:variable name="srcsrcid" select="//*[@id = $sourceElement/@source]/@parent"/>
-        <xsl:variable name="tgttgtid" select="//*[@id = $targetElement/@target]/@parent"/>
-        
+        <xsl:variable name="tgtsrcid" select="//*[@id = $targetElement/@source]/@parent" />
+        <xsl:variable name="srctgtid" select="//*[@id = $sourceElement/@target]/@parent" />
+        <xsl:variable name="srcsrcid" select="//*[@id = $sourceElement/@source]/@parent" />
+        <xsl:variable name="tgttgtid" select="//*[@id = $targetElement/@target]/@parent" />
+
         <xsl:if test="(string-length($tgtsrcid) = 0 or $tgtsrcid != $SPLITID) and (string-length($tgttgtid) = 0 or $tgttgtid != $SPLITID) and (string-length($srctgtid) = 0 or $srctgtid != $SPLITID) and (string-length($srcsrcid) = 0 or $srcsrcid != $SPLITID)">
           <xsl:copy>
-            <xsl:copy-of select="@*"/>
-            <xsl:copy-of select="node()"/>
+            <xsl:copy-of select="@*" />
+            <xsl:copy-of select="node()" />
           </xsl:copy>
         </xsl:if>
       </xsl:if>
