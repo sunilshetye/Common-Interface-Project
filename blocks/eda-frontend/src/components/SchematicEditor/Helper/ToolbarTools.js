@@ -563,7 +563,6 @@ function parseXmlToGraph (xmlDoc, graph) {
             }
           }
           v1.parameter_values = parameterValues
-          v1.ordering = 0
           // Todo set v1.errorFields
           v1.explicitInputPorts = 0
           v1.implicitInputPorts = 0
@@ -639,10 +638,7 @@ function parseXmlToGraph (xmlDoc, graph) {
           }
 
           vp.ordering = ordering
-
           vp.ParentComponent = v1.id
-          console.log('VP:', vp)
-          // console.log('vp.ordering =:', cellAttrs.ordering)
         } else if (cellAttrs.edge) { // is edge
           const edgeId = cellAttrs.id.value
 

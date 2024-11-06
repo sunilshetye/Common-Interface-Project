@@ -416,10 +416,10 @@ print()
 newEdgeDict = {}
 for (attribid, sourceVertex, targetVertex, sourceType, targetType, style, waypoints, addSplit, split_point, split_point2) in edgeList:
     link_data = (attribid, sourceVertex, targetVertex, sourceType, targetType, style, waypoints, addSplit, split_point, split_point2)
-    print('NEWEDGE00:', attribid, waypoints, split_point, addSplit)
+    print('NEWEDGE:', attribid, waypoints, split_point, addSplit)
+
     if not addSplit:
         newEdgeDict[attribid] = [link_data]
-        print('NEWEDGE:', attribid, waypoints, split_point)
         continue
 
     for attribid2 in sourceVertex, targetVertex:
