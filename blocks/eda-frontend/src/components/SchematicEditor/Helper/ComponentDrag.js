@@ -449,6 +449,7 @@ export default function LoadGrid (container, sidebar, outline) {
       if (c !== undefined) {
         c.parameter_values = parameterValues
         c.errorFields = {}
+        c.ordering = 0
         c.displayProperties = displayProperties
       }
     })
