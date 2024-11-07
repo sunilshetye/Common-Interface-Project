@@ -69,7 +69,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-
+    
       <xsl:if test="$targetonelink/@id != '' and $sourceonelink/@id != ''">
         <!-- generate new primary link one -->
         <xsl:element name="{$linktype}">
@@ -106,6 +106,7 @@
           </mxGeometry>
         </xsl:element>
       </xsl:if>
+      
 
       <!-- generate new primary link two id -->
       <xsl:variable name="newidtwo">
@@ -357,14 +358,17 @@
 
         <xsl:when test="count($ImplicitPort) >= 3">
           <xsl:variable name="linktype">ImplicitLink</xsl:variable>
+          <!-- find ports connected to splitblock -->
           <xsl:variable name="targetimplicitoneid" select="$ImplicitPort[position()=1]/@id" />
           <xsl:variable name="sourceimplicitoneid" select="$ImplicitPort[position()=2]/@id" />
           <xsl:variable name="sourceimplicittwoid" select="$ImplicitPort[position()=3]/@id" />
           <xsl:variable name="sourceimplicitthreeid" select="$ImplicitPort[position()=4]/@id" />
+          <!-- find links connected to ports connected to splitblock -->
           <xsl:variable name="targetimplicitonelink" select="key('k-implicitlink', $targetimplicitoneid)" />
           <xsl:variable name="sourceimplicitonelink" select="key('k-implicitlink', $sourceimplicitoneid)" />
           <xsl:variable name="sourceimplicittwolink" select="key('k-implicitlink', $sourceimplicittwoid)" />
           <xsl:variable name="sourceimplicitthreelink" select="key('k-implicitlink', $sourceimplicitthreeid)" />
+          <!-- find secondary links connected to links connected to ports connected to splitblock -->
           <xsl:variable name="targetonesrcsecondlink" select="key('k-implicitsrclink', $targetimplicitonelink/@id)" />
           <xsl:variable name="targetonetgtsecondlink" select="key('k-implicittgtlink', $targetimplicitonelink/@id)" />
           <xsl:variable name="sourceonesrcsecondlink" select="key('k-implicitsrclink', $sourceimplicitonelink/@id)" />
@@ -373,6 +377,7 @@
           <xsl:variable name="sourcetwotgtsecondlink" select="key('k-implicittgtlink', $sourceimplicittwolink/@id)" />
           <xsl:variable name="sourcethreesrcsecondlink" select="key('k-implicitsrclink', $sourceimplicitthreelink/@id)" />
           <xsl:variable name="sourcethreetgtsecondlink" select="key('k-implicittgtlink', $sourceimplicitthreelink/@id)" />
+          <!-- find other (tgt|src) ports connected to links connected to (src|tgt) ports connected to splitblock -->
           <xsl:variable name="targetonelinksort">
             <xsl:choose>
               <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@source">
@@ -428,17 +433,17 @@
               </xsl:otherwise>
             </xsl:choose>
           </xsl:variable>
-
+          <!-- find waypoints of links connected to ports connected to splitblock -->
           <xsl:variable name="tmptargetonewaypoints">
             <waypoints>
               <xsl:choose>
-                <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@target">
+                <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@source">
                   <xsl:for-each select="$targetimplicitonelink/mxGeometry/Array/mxPoint">
                     <xsl:sort select="position()" order="descending"/>
                     <xsl:copy-of select="."/>
                   </xsl:for-each>
                 </xsl:when>
-                <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@source">
+                <xsl:when test="$targetimplicitoneid = $targetimplicitonelink/@target">
                   <xsl:copy-of select="$targetimplicitonelink/mxGeometry/Array/mxPoint" />
                 </xsl:when>
                 <xsl:otherwise>
