@@ -345,175 +345,211 @@
     <!-- }}} -->
 
     <!-- find links connected to ports connected to splitblock (node-set) {{{ -->
-    <xsl:variable name="targetonelink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-          <xsl:copy-of select="key('k-link', $targetoneid)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-          <xsl:copy-of select="key('k-commandlink', $targetoneid)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-          <xsl:copy-of select="key('k-implicitlink', $targetoneid)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmptargetonelink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+            <xsl:copy-of select="key('k-link', $targetoneid)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+            <xsl:copy-of select="key('k-commandlink', $targetoneid)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+            <xsl:copy-of select="key('k-implicitlink', $targetoneid)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="targetonelink" select="ext:node-set($tmptargetonelink)/links/*" />
 
-    <xsl:variable name="sourceonelink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-          <xsl:copy-of select="key('k-link', $sourceoneid)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-          <xsl:copy-of select="key('k-commandlink', $sourceoneid)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-          <xsl:copy-of select="key('k-implicitlink', $sourceoneid)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourceonelink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+            <xsl:copy-of select="key('k-link', $sourceoneid)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+            <xsl:copy-of select="key('k-commandlink', $sourceoneid)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+            <xsl:copy-of select="key('k-implicitlink', $sourceoneid)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourceonelink" select="ext:node-set($tmpsourceonelink)/links/*" />
 
-    <xsl:variable name="sourcetwolink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-          <xsl:copy-of select="key('k-link', $sourcetwoid)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-          <xsl:copy-of select="key('k-commandlink', $sourcetwoid)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-          <xsl:copy-of select="key('k-implicitlink', $sourcetwoid)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourcetwolink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+            <xsl:copy-of select="key('k-link', $sourcetwoid)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+            <xsl:copy-of select="key('k-commandlink', $sourcetwoid)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+            <xsl:copy-of select="key('k-implicitlink', $sourcetwoid)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourcetwolink" select="ext:node-set($tmpsourcetwolink)/links/*" />
 
-    <xsl:variable name="sourcethreelink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-          <xsl:copy-of select="key('k-link', $sourcethreeid)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-          <xsl:copy-of select="key('k-commandlink', $sourcethreeid)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-          <xsl:copy-of select="key('k-implicitlink', $sourcethreeid)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourcethreelink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+            <xsl:copy-of select="key('k-link', $sourcethreeid)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+            <xsl:copy-of select="key('k-commandlink', $sourcethreeid)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+            <xsl:copy-of select="key('k-implicitlink', $sourcethreeid)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourcethreelink" select="ext:node-set($tmpsourcethreelink)/links/*" />
     <!-- }}} -->
 
     <!-- find secondary links connected to links connected to ports connected to splitblock (node-set) {{{ -->
-    <xsl:variable name="targetonesrcsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-srclink', $targetonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandsrclink', $targetonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $targetonelink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmptargetonesrcsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-srclink', $targetonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandsrclink', $targetonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $targetonelink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="targetonesrcsecondlink" select="ext:node-set($tmptargetonesrcsecondlink)/links/*" />
 
-    <xsl:variable name="targetonetgtsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-tgtlink', $targetonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandtgtlink', $targetonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $targetonelink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmptargetonetgtsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-tgtlink', $targetonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandtgtlink', $targetonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $targetonelink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="targetonetgtsecondlink" select="ext:node-set($tmptargetonetgtsecondlink)/links/*" />
 
-    <xsl:variable name="sourceonesrcsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-srclink', $sourceonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandsrclink', $sourceonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $sourceonelink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourceonesrcsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-srclink', $sourceonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandsrclink', $sourceonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $sourceonelink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourceonesrcsecondlink" select="ext:node-set($tmpsourceonesrcsecondlink)/links/*" />
 
-    <xsl:variable name="sourceonetgtsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-tgtlink', $sourceonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandtgtlink', $sourceonelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $sourceonelink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourceonetgtsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-tgtlink', $sourceonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandtgtlink', $sourceonelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $sourceonelink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourceonetgtsecondlink" select="ext:node-set($tmpsourceonetgtsecondlink)/links/*" />
 
-    <xsl:variable name="sourcetwosrcsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-srclink', $sourcetwolink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandsrclink', $sourcetwolink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $sourcetwolink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourcetwosrcsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-srclink', $sourcetwolink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandsrclink', $sourcetwolink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $sourcetwolink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourcetwosrcsecondlink" select="ext:node-set($tmpsourcetwosrcsecondlink)/links/*" />
 
-    <xsl:variable name="sourcetwotgtsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-tgtlink', $sourcetwolink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandtgtlink', $sourcetwolink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $sourcetwolink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourcetwotgtsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-tgtlink', $sourcetwolink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandtgtlink', $sourcetwolink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $sourcetwolink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourcetwotgtsecondlink" select="ext:node-set($tmpsourcetwotgtsecondlink)/links/*" />
 
-    <xsl:variable name="sourcethreesrcsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-srclink', $sourcethreelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandsrclink', $sourcethreelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $sourcethreelink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourcethreesrcsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-srclink', $sourcethreelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandsrclink', $sourcethreelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $sourcethreelink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourcethreesrcsecondlink" select="ext:node-set($tmpsourcethreesrcsecondlink)/links/*" />
 
-    <xsl:variable name="sourcethreetgtsecondlink">
-      <xsl:choose>
-        <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
-        <xsl:copy-of select="key('k-tgtlink', $sourcethreelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
-        <xsl:copy-of select="key('k-commandtgtlink', $sourcethreelink/@id)" />
-        </xsl:when>
-        <xsl:when test="count($ImplicitPort) >= 3">
-        <xsl:copy-of select="key('k-implicitsrclink', $sourcethreelink/@id)" />
-        </xsl:when>
-      </xsl:choose>
+    <xsl:variable name="tmpsourcethreetgtsecondlink">
+      <links>
+        <xsl:choose>
+          <xsl:when test="count($InputPort) >= 1 and count($OutputPort) >= 2">
+          <xsl:copy-of select="key('k-tgtlink', $sourcethreelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ControlPort) >= 1 and count($CommandPort) >= 2">
+          <xsl:copy-of select="key('k-commandtgtlink', $sourcethreelink/@id)" />
+          </xsl:when>
+          <xsl:when test="count($ImplicitPort) >= 3">
+          <xsl:copy-of select="key('k-implicitsrclink', $sourcethreelink/@id)" />
+          </xsl:when>
+        </xsl:choose>
+      </links>
     </xsl:variable>
+    <xsl:variable name="sourcethreetgtsecondlink" select="ext:node-set($tmpsourcethreetgtsecondlink)/links/*" />
     <!-- }}} -->
 
     <!-- find other (tgt|src) ports connected to links connected to (src|tgt) ports connected to splitblock (value) {{{ -->
