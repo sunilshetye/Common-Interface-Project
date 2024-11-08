@@ -29,6 +29,8 @@
   <xsl:key name="k-implicitlink" match="ImplicitLink" use="@source | @target" />
   <xsl:key name="k-implicitsrclink" match="ImplicitLink" use="@source" />
   <xsl:key name="k-implicittgtlink" match="ImplicitLink" use="@target" />
+
+  <xsl:key name="k-block" match="AfficheBlock | BasicBlock | BigSom | EventInBlock | EventOutBlock | ExplicitInBlock | ExplicitOutBlock | GroundBlock | ImplicitInBlock | ImplicitOutBlock | Product | RoundBlock | SplitBlock | Summation | SuperBlock | TextBlock | VoltageSensorBlock" use="@id" />
   <!-- }}}1 -->
 
   <!-- links template {{{1 -->
