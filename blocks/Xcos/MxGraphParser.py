@@ -208,7 +208,10 @@ for root in model:
         for i, cell in enumerate(cells):
             try:
                 attrib = cell.attrib
-                attribid = attrib['id']
+                try:
+                    attribid = attrib['id']
+                except KeyError:
+                    continue
                 attribint = get_int(attribid)
                 if nextattribid <= attribint:
                     nextattribid = attribint + 1
