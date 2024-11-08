@@ -31,6 +31,7 @@
   <xsl:key name="k-implicittgtlink" match="ImplicitLink" use="@target" />
 
   <xsl:key name="k-block" match="AfficheBlock | BasicBlock | BigSom | EventInBlock | EventOutBlock | ExplicitInBlock | ExplicitOutBlock | GroundBlock | ImplicitInBlock | ImplicitOutBlock | Product | RoundBlock | SplitBlock | Summation | SuperBlock | TextBlock | VoltageSensorBlock" use="@id" />
+  <xsl:key name="k-port" match="ExplicitInputPort | ExplicitOutputPort | ControlPort | CommandPort | ImplicitInputPort | ImplicitOutputPort" use="@id" />
   <!-- }}}1 -->
 
   <!-- links template {{{1 -->
@@ -60,6 +61,15 @@
     <xsl:param name="x" />
     <xsl:param name="y" />
     <xsl:param name="parent" />
+    <xsl:param name="targetoneblockx" />
+    <xsl:param name="targetoneblocky" />
+    <xsl:param name="sourceoneblockx" />
+    <xsl:param name="sourceoneblocky" />
+    <xsl:param name="sourcetwoblockx" />
+    <xsl:param name="sourcetwoblocky" />
+    <xsl:param name="sourcethreeblockx" />
+    <xsl:param name="sourcethreeblocky" />
+
     <!-- }}} -->
 
     <!-- generate new primary link one id {{{ -->
@@ -101,6 +111,25 @@
         </xsl:attribute>
         <xsl:attribute name="value"></xsl:attribute>
         <mxGeometry relative="1" as="geometry">
+          <mxPoint>
+            <xsl:attribute name="x">
+              <xsl:value-of select="$sourceoneblockx" />
+            </xsl:attribute>
+            <xsl:attribute name="y">
+              <xsl:value-of select="$sourceoneblocky" />
+            </xsl:attribute>
+            <xsl:attribute name="as">sourcePoint</xsl:attribute>
+          </mxPoint>
+          <!-- targetPoint added by suchita -->
+          <mxPoint>
+            <xsl:attribute name="x">
+              <xsl:value-of select="$targetoneblockx" />
+            </xsl:attribute>
+            <xsl:attribute name="y">
+              <xsl:value-of select="$targetoneblocky" />
+            </xsl:attribute>
+            <xsl:attribute name="as">targetPoint</xsl:attribute>
+          </mxPoint>
           <Array as="points">
             <xsl:for-each select="$targetonewaypoints">
               <xsl:copy-of select="." />
@@ -192,6 +221,15 @@
             <xsl:value-of select="$y" />
           </xsl:attribute>
           <xsl:attribute name="as">sourcePoint</xsl:attribute>
+        </mxPoint>
+        <mxPoint>
+          <xsl:attribute name="x">
+            <xsl:value-of select="$sourcetwoblockx" />
+          </xsl:attribute>
+          <xsl:attribute name="y">
+            <xsl:value-of select="$sourcetwoblocky" />
+          </xsl:attribute>
+          <xsl:attribute name="as">targetPoint</xsl:attribute>
         </mxPoint>
         <Array as="points">
           <xsl:for-each select="$sourcetwowaypoints">
@@ -569,6 +607,40 @@
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:variable name="targetonelinkassort">
+      <xsl:choose>
+        <xsl:when test="$targetoneid = $targetonelink/@source">sourcePoint</xsl:when>
+        <xsl:when test="$targetoneid = $targetonelink/@target">targetPoint</xsl:when>
+        <xsl:otherwise>
+          <xsl:text>No match found</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="targetoneportsort" select="key('k-port', $targetonelinksort)" />
+    <xsl:variable name="targetoneblocksort" select="key('k-block', $targetoneportsort/@parent)" />
+    <xsl:variable name="targetoneblockx">
+      <xsl:choose>
+        <xsl:when test="$targetonelink/mxGeometry/mxPoint[@as=$targetonelinkassort]">
+          <xsl:value-of select="$targetonelink/mxGeometry/mxPoint[@as=$targetonelinkassort]/@x" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$targetoneblocksort/mxGeometry/@x" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:variable name="targetoneblocky" >
+        <xsl:choose>
+        <xsl:when test="$targetonelink/mxGeometry/mxPoint[@as=$targetonelinkassort]">
+          <xsl:value-of select="$targetonelink/mxGeometry/mxPoint[@as=$targetonelinkassort]/@y" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$targetoneblocksort/mxGeometry/@y" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <xsl:variable name="sourceonelinksort">
       <xsl:choose>
         <xsl:when test="$sourceoneid = $sourceonelink/@source">
@@ -583,6 +655,49 @@
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:variable name="sourceonelinkassort">
+      <xsl:choose>
+        <xsl:when test="$sourceoneid = $sourceonelink/@source">sourcePoint</xsl:when>
+        <xsl:when test="$sourceoneid = $sourceonelink/@target">targetPoint</xsl:when>
+        <xsl:otherwise>
+          <xsl:text>No match found</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="sourceoneportsort" select="key('k-port', $sourceonelinksort)" />
+    <xsl:variable name="sourceoneblocksort" select="key('k-block', $sourceoneportsort/@parent)" />
+    <xsl:variable name="sourceoneblockx">
+      <xsl:choose>
+        <xsl:when test="$sourceonelink/mxGeometry/mxPoint[@as=$sourceonelinkassort]">
+          <xsl:value-of select="$sourceonelink/mxGeometry/mxPoint[@as=$sourceonelinkassort]/@x" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$sourceoneblocksort/mxGeometry/@x" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:variable name="sourceoneblocky" >
+        <xsl:choose>
+        <xsl:when test="$sourceonelink/mxGeometry/mxPoint[@as=$sourceonelinkassort]">
+          <xsl:value-of select="$sourceonelink/mxGeometry/mxPoint[@as=$sourceonelinkassort]/@y" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$sourceoneblocksort/mxGeometry/@y" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="sourcetwolinkassort">
+      <xsl:choose>
+        <xsl:when test="$sourcetwoid = $sourcetwolink/@source">sourcePoint</xsl:when>
+        <xsl:when test="$sourcetwoid = $sourcetwolink/@target">targetPoint</xsl:when>
+        <xsl:otherwise>
+          <xsl:text>No match found</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="sourcetwolinksort">
       <xsl:choose>
         <xsl:when test="$sourcetwoid = $sourcetwolink/@source">
@@ -597,6 +712,40 @@
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:variable name="sourcetwoportsort" select="key('k-port', $sourcetwolinksort)" />
+    <xsl:variable name="sourcetwoblocksort" select="key('k-block', $sourcetwoportsort/@parent)" />
+    <xsl:variable name="sourcetwoblockx">
+      <xsl:choose>
+        <xsl:when test="$sourcetwolink/mxGeometry/mxPoint[@as=$sourcetwolinkassort]">
+          <xsl:value-of select="$sourcetwolink/mxGeometry/mxPoint[@as=$sourcetwolinkassort]/@x" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$sourcetwoblocksort/mxGeometry/@x" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:variable name="sourcetwoblocky" >
+        <xsl:choose>
+        <xsl:when test="$sourcetwolink/mxGeometry/mxPoint[@as=$sourcetwolinkassort]">
+          <xsl:value-of select="$sourcetwolink/mxGeometry/mxPoint[@as=$sourcetwolinkassort]/@y" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$sourcetwoblocksort/mxGeometry/@y" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+
+    <xsl:variable name="sourcethreelinkassort">
+      <xsl:choose>
+        <xsl:when test="$sourcethreeid = $sourcethreelink/@source">sourcePoint</xsl:when>
+        <xsl:when test="$sourcethreeid = $sourcethreelink/@target">targetPoint</xsl:when>
+        <xsl:otherwise>
+          <xsl:text>No match found</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="sourcethreelinksort">
       <xsl:choose>
         <xsl:when test="$sourcethreeid = $sourcethreelink/@source">
@@ -607,6 +756,30 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>No match found</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="sourcethreeportsort" select="key('k-port', $sourcethreelinksort)" />
+    <xsl:variable name="sourcethreeblocksort" select="key('k-block', $sourcethreeportsort/@parent)" />
+    <xsl:variable name="sourcethreeblockx">
+      <xsl:choose>
+        <xsl:when test="$sourcethreelink/mxGeometry/mxPoint[@as=$sourcethreelinkassort]">
+          <xsl:value-of select="$sourcethreelink/mxGeometry/mxPoint[@as=$sourcethreelinkassort]/@x" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$sourcethreeblocksort/mxGeometry/@x" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:variable name="sourcethreeblocky" >
+        <xsl:choose>
+        <xsl:when test="$sourcethreelink/mxGeometry/mxPoint[@as=$sourcethreelinkassort]">
+          <xsl:value-of select="$sourcethreelink/mxGeometry/mxPoint[@as=$sourcethreelinkassort]/@y" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$sourcethreeblocksort/mxGeometry/@y" />
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -699,6 +872,15 @@
       <xsl:with-param name="x" select="$x" />
       <xsl:with-param name="y" select="$y" />
       <xsl:with-param name="parent" select="$parent" />
+      <xsl:with-param name="targetoneblockx" select="$targetoneblockx" />
+      <xsl:with-param name="targetoneblocky" select="$targetoneblocky" />
+      <xsl:with-param name="sourceoneblockx" select="$sourceoneblockx" />
+      <xsl:with-param name="sourceoneblocky" select="$sourceoneblocky" />
+      <xsl:with-param name="sourcetwoblockx" select="$sourcetwoblockx" />
+      <xsl:with-param name="sourcetwoblocky" select="$sourcetwoblocky" />
+      <xsl:with-param name="sourcethreeblockx" select="$sourcethreeblockx" />
+      <xsl:with-param name="sourcethreeblocky" select="$sourcethreeblocky" />
+
     </xsl:call-template>
     <!-- }}} -->
 
